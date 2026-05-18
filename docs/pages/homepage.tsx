@@ -28,8 +28,13 @@ import {
 } from '@tabler/icons-react';
 import { Video } from '@gfazioli/mantine-video';
 
-const VIDEO_SRC = 'https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4';
-const VIDEO_POSTER = 'https://archive.org/services/img/mantas-in-3-minutes';
+const MANTA_VIDEO = 'https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4';
+const MANTA_POSTER = 'https://archive.org/services/img/mantas-in-3-minutes';
+
+// Charleston Aquarium stock footage — CC0 public domain, ~37s, colourful tropical fish
+const AQUARIUM_VIDEO =
+  'https://archive.org/download/aquarium-stock-video/CharlestonAquariumStockVideo-079.mp4';
+const AQUARIUM_POSTER = 'https://archive.org/services/img/aquarium-stock-video';
 
 const features = [
   {
@@ -67,9 +72,9 @@ const features = [
 export default function HomepagePage() {
   return (
     <Box bg="black">
-      {/* HERO SECTION — full viewport video background */}
+      {/* HERO SECTION — full viewport video background (manta footage) */}
       <Box pos="relative" h="100vh" style={{ overflow: 'hidden' }}>
-        <Video src={VIDEO_SRC} poster={VIDEO_POSTER} asBackground autoPlay muted loop />
+        <Video src={MANTA_VIDEO} poster={MANTA_POSTER} asBackground autoPlay muted loop />
 
         <Box
           pos="absolute"
@@ -178,9 +183,9 @@ export default function HomepagePage() {
         </Container>
       </Box>
 
-      {/* SHOWCASE SECTION — 70vh with video background again, but with a different tone */}
+      {/* SHOWCASE SECTION — 70vh with a different video (aquarium reef) for visual variety */}
       <Box pos="relative" h="70vh" style={{ overflow: 'hidden' }}>
-        <Video src={VIDEO_SRC} poster={VIDEO_POSTER} asBackground autoPlay muted loop />
+        <Video src={AQUARIUM_VIDEO} poster={AQUARIUM_POSTER} asBackground autoPlay muted loop />
 
         <Box
           pos="absolute"
@@ -254,9 +259,9 @@ export default function HomepagePage() {
         </Container>
       </Box>
 
-      {/* CTA SECTION — last video background, narrow */}
+      {/* CTA SECTION — closes the page with the manta again (visual bookend) */}
       <Box pos="relative" h="60vh" style={{ overflow: 'hidden' }}>
-        <Video src={VIDEO_SRC} poster={VIDEO_POSTER} asBackground autoPlay muted loop />
+        <Video src={MANTA_VIDEO} poster={MANTA_POSTER} asBackground autoPlay muted loop />
 
         <Box
           pos="absolute"
@@ -290,15 +295,25 @@ export default function HomepagePage() {
               </Button>
             </Group>
             <Text fz={11} c="rgba(255,255,255,0.5)">
-              Manta footage —{' '}
+              Footage —{' '}
               <Anchor
                 href="https://archive.org/details/mantas-in-3-minutes"
                 c="rgba(255,255,255,0.7)"
                 target="_blank"
                 rel="noopener"
               >
-                Internet Archive
+                manta
               </Anchor>
+              {' & '}
+              <Anchor
+                href="https://archive.org/details/aquarium-stock-video"
+                c="rgba(255,255,255,0.7)"
+                target="_blank"
+                rel="noopener"
+              >
+                aquarium
+              </Anchor>
+              {' '}— Internet Archive
             </Text>
           </Stack>
         </Container>
