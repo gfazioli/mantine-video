@@ -29,13 +29,18 @@ export const VideoCaptionsButton = forwardRef<HTMLButtonElement, VideoCaptionsBu
         setActive(captionsTracks.some((t) => t.mode === 'showing'));
       };
       sync();
-      v.textTracks.addEventListener('change', sync);
-      v.textTracks.addEventListener('addtrack', sync);
-      v.textTracks.addEventListener('removetrack', sync);
+      const tt = v.textTracks as TextTrackList & {
+        addEventListener?: TextTrackList['addEventListener'];
+        removeEventListener?: TextTrackList['removeEventListener'];
+      };
+      if (typeof tt.addEventListener !== 'function') return;
+      tt.addEventListener('change', sync);
+      tt.addEventListener('addtrack', sync);
+      tt.addEventListener('removetrack', sync);
       return () => {
-        v.textTracks.removeEventListener('change', sync);
-        v.textTracks.removeEventListener('addtrack', sync);
-        v.textTracks.removeEventListener('removetrack', sync);
+        tt.removeEventListener?.('change', sync);
+        tt.removeEventListener?.('addtrack', sync);
+        tt.removeEventListener?.('removetrack', sync);
       };
     }, [ctx.videoRef]);
 

@@ -1,30 +1,79 @@
 import React from 'react';
-import { forwardRef, useCallback, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 import { Box, Slider, type BoxProps, type SliderProps } from '@mantine/core';
 import { useVideoContext } from '../Video.context';
 
 export interface VideoTimelineProps extends Omit<BoxProps, 'onChange'> {
   /** Slider props forwarded to the underlying Mantine Slider */
   sliderProps?: Partial<Omit<SliderProps, 'value' | 'onChange' | 'onChangeEnd' | 'max' | 'min'>>;
+
+  /**
+   * Live-scrub the video while dragging the timeline thumb — the underlying `<video>`
+   * element seeks to the new position on every change, so the user sees the frame
+   * update in real time. The player is paused for the duration of the drag and
+   * resumes automatically on release if it was playing. Default `true`.
+   */
+  liveScrub?: boolean;
 }
 
 export const VideoTimeline = forwardRef<HTMLDivElement, VideoTimelineProps>(
-  ({ sliderProps, ...others }, ref) => {
+  ({ sliderProps, liveScrub = true, ...others }, ref) => {
     const ctx = useVideoContext();
     const [scrubbing, setScrubbing] = useState<number | null>(null);
+    const isScrubbingRef = useRef(false);
+    const wasPlayingRef = useRef(false);
+    const rafRef = useRef<number | null>(null);
+    const pendingSeekRef = useRef<number | null>(null);
 
     const max = Number.isFinite(ctx.duration) && ctx.duration > 0 ? ctx.duration : 0;
     const value = scrubbing ?? ctx.currentTime;
     const bufferedPercent = max > 0 ? (ctx.buffered / max) * 100 : 0;
 
-    const handleChange = useCallback((v: number) => {
-      setScrubbing(v);
+    useEffect(() => () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     }, []);
+
+    const handleChange = useCallback(
+      (v: number) => {
+        if (!isScrubbingRef.current) {
+          isScrubbingRef.current = true;
+          wasPlayingRef.current = ctx.playing;
+          if (liveScrub && ctx.playing) {
+            ctx.pause();
+          }
+        }
+        setScrubbing(v);
+
+        if (!liveScrub) return;
+
+        pendingSeekRef.current = v;
+        if (rafRef.current === null) {
+          rafRef.current = requestAnimationFrame(() => {
+            rafRef.current = null;
+            if (pendingSeekRef.current !== null) {
+              ctx.seek(pendingSeekRef.current);
+              pendingSeekRef.current = null;
+            }
+          });
+        }
+      },
+      [ctx, liveScrub]
+    );
 
     const handleChangeEnd = useCallback(
       (v: number) => {
+        if (rafRef.current !== null) {
+          cancelAnimationFrame(rafRef.current);
+          rafRef.current = null;
+        }
+        pendingSeekRef.current = null;
         ctx.seek(v);
         setScrubbing(null);
+        isScrubbingRef.current = false;
+        if (wasPlayingRef.current) {
+          wasPlayingRef.current = false;
+          ctx.play();
+        }
       },
       [ctx]
     );
