@@ -18,21 +18,23 @@
 ## Overview
 
 This component is created on top of the [Mantine](https://mantine.dev/) library.
+It requires **Mantine 9.x** and **React 19**.
 
-The [Mantine Video](https://gfazioli.github.io/mantine-video/) component is a customizable video player for React applications built with Mantine. It wraps the native HTML `<video>` element with a compound API in Mantine ecosystem style, a headless `useVideo` hook, theme-aware styling and a complete Styles API.
+[Mantine Video](https://gfazioli.github.io/mantine-video/) is a Mantine‑native video player built on top of the standard HTML `<video>` element. It pairs a polymorphic root component with a complete **compound API** (`Video.Controls`, `Video.PlayButton`, `Video.Timeline`, `Video.MuteButton`, `Video.CaptionsButton`, `Video.PiPButton`, `Video.FullscreenButton`, `Video.SkipButton`, `Video.TimeDisplay`) and a fully **headless `useVideo` hook** so you can either use the batteries‑included control bar, compose your own with Mantine sub‑components, or build a 100% custom UI on top of the underlying state. Every part is theme‑aware (color scheme, theme colors, radii, sizes), accessible (ARIA labels, keyboard shortcuts, focus management), and customizable through the full Mantine **Styles API** (`classNames`, `styles`, `vars`, `unstyled`). Four built‑in `variant`s — `overlay`, `minimal`, `floating`, `bordered` — cover the most common layouts out of the box. Fullscreen and **Picture‑in‑Picture** are wired in for browsers that support the standard APIs, with capability‑aware sub‑components that self‑hide when not supported (so you never see a broken button on Firefox).
 
 ## Features
 
-- 🎬 **Compound API**: `Video.Controls`, `Video.PlayButton`, `Video.Timeline`, `Video.MuteButton`, `Video.FullscreenButton`, `Video.PiPButton`, `Video.CaptionsButton`, `Video.SkipButton`, `Video.TimeDisplay`
-- 🪝 **Headless `useVideo` hook**: full state and actions to build a fully custom UI
-- 🎨 **Mantine theme integration**: ColorScheme aware, theme colors, radii, sizes
-- 🎭 **Variants**: `overlay`, `minimal`, `floating`, `bordered`
-- ⌨️ **Keyboard shortcuts**: Space, ←/→, ↑/↓, M, F, P, J/K/L
-- 🖥️ **Fullscreen + Picture-in-Picture** out of the box
-- 🗣️ **Captions / subtitles** via native `<track>`
-- ♿ **Accessibility**: ARIA labels, focus-visible, screen reader friendly
-- 🎨 **Styles API**: complete `classNames`, `styles`, `vars`, `unstyled` support on every part
-- 📦 **TypeScript**: full type safety out of the box
+- 🎬 **Compound API** — `Video.Controls`, `Video.PlayButton`, `Video.SkipButton`, `Video.Timeline`, `Video.TimeDisplay`, `Video.MuteButton`, `Video.CaptionsButton`, `Video.PiPButton`, `Video.FullscreenButton`
+- 🪝 **Headless `useVideo` hook** — full state (`playing`, `currentTime`, `duration`, `buffered`, `volume`, `muted`, `playbackRate`, `fullscreen`, `pip`, `canPlay`, `canFullscreen`, `canPiP`, `isLoading`, `error`) and actions (`play`, `pause`, `toggle`, `seek`, `seekBy`, `setVolume`, `toggleMute`, `setPlaybackRate`, `toggleFullscreen`, `togglePiP`)
+- 🎭 **Four variants** — `overlay` (default, YouTube‑style), `minimal`, `floating`, `bordered`
+- 🎨 **Mantine theme integration** — `color`, `radius`, `size` props plus full color‑scheme awareness
+- 🎨 **Styles API** — `classNames`, `styles`, `vars`, `unstyled` on every part
+- ⌨️ **Keyboard shortcuts** — Space / K (play/pause), J / L (±10s), ←/→ (±5s), ↑/↓ (volume), M (mute), F (fullscreen), P (PiP)
+- 🖥️ **Fullscreen + Picture‑in‑Picture** out of the box, capability‑aware
+- 🗣️ **Captions / subtitles** via native `<track>` — toggle button auto‑hides when no tracks present
+- 🎛️ **Controlled + uncontrolled** for `playing`, `currentTime`, `volume`, `playbackRate`
+- ♿ **Accessibility** — ARIA labels, `aria-pressed` toggles, focus‑visible outlines
+- 📦 **TypeScript** — full type safety, every prop documented
 
 > [!note]
 >
@@ -43,7 +45,7 @@ The [Mantine Video](https://gfazioli.github.io/mantine-video/) component is a cu
 ```sh
 npm install @gfazioli/mantine-video
 ```
-or 
+or
 
 ```sh
 yarn add @gfazioli/mantine-video
@@ -55,7 +57,15 @@ After installation import package styles at the root of your application:
 import '@gfazioli/mantine-video/styles.css';
 ```
 
+Or use the layered version inside `@layer mantine-video`:
+
+```tsx
+import '@gfazioli/mantine-video/styles.layer.css';
+```
+
 ## Usage
+
+The simplest usage — pass `src`, optionally `poster` and `aspectRatio`, and you get a fully themed player with play / pause, seekable timeline, time display, volume, captions, picture‑in‑picture and fullscreen out of the box:
 
 ```tsx
 import { Video } from '@gfazioli/mantine-video';
@@ -73,12 +83,14 @@ function Demo() {
 
 ### Custom controls
 
+The default control bar is just a sensible composition of compound sub‑components. Pass `controls={false}` and provide your own `<Video.Controls>` children to fully customize the layout — reorder, drop, add or theme any part:
+
 ```tsx
 import { Video } from '@gfazioli/mantine-video';
 
 function Demo() {
   return (
-    <Video src="..." controls={false}>
+    <Video src="https://example.com/video.mp4" aspectRatio={16 / 9} controls={false}>
       <Video.Controls>
         <Video.PlayButton />
         <Video.SkipButton seconds={-10} />
@@ -86,6 +98,8 @@ function Demo() {
         <Video.Timeline />
         <Video.TimeDisplay format="current/-remaining" />
         <Video.MuteButton />
+        <Video.CaptionsButton />
+        <Video.PiPButton />
         <Video.FullscreenButton />
       </Video.Controls>
     </Video>
@@ -95,19 +109,48 @@ function Demo() {
 
 ### Headless with `useVideo`
 
+If you need a completely custom UI, skip `<Video>` and use the `useVideo` hook directly. It returns the video state and a full set of actions; just bind the `videoRef` to a native `<video>` element:
+
 ```tsx
+import { ActionIcon, Slider } from '@mantine/core';
+import { IconPlayerPauseFilled, IconPlayerPlayFilled } from '@tabler/icons-react';
 import { useVideo } from '@gfazioli/mantine-video';
 
 function Demo() {
   const video = useVideo();
+
   return (
     <div>
-      <video ref={video.videoRef} src="..." />
-      <button onClick={video.toggle}>{video.playing ? 'Pause' : 'Play'}</button>
+      <video ref={video.videoRef} src="https://example.com/video.mp4" />
+      <ActionIcon onClick={video.toggle}>
+        {video.playing ? <IconPlayerPauseFilled /> : <IconPlayerPlayFilled />}
+      </ActionIcon>
+      <Slider value={video.currentTime} max={video.duration} onChange={video.seek} />
     </div>
   );
 }
 ```
+
+### Picture-in-Picture lifecycle
+
+Hook into the user popping the video in and out — for example to dim a sidebar or show a "playing in PiP" indicator elsewhere on the page:
+
+```tsx
+<Video
+  src="..."
+  onEnterPictureInPicture={() => console.log('entered PiP')}
+  onLeavePictureInPicture={() => console.log('left PiP')}
+/>
+```
+
+## Variants
+
+| Variant | Description |
+|---------|-------------|
+| `overlay` *(default)* | Controls float over the bottom of the video with a gradient backdrop, fade in on hover, auto‑hide while playing |
+| `minimal` | Controls placed below the video in the page flow, no overlay |
+| `floating` | Like `overlay` but the bar is a rounded floating card with a blurred backdrop |
+| `bordered` | Bordered container wraps both video and controls below, ideal for cards / lists |
 
 ## Sponsor
 
@@ -134,4 +177,3 @@ Your help truly matters.
 ---
   
 [![Star History Chart](https://api.star-history.com/svg?repos=gfazioli/mantine-video&type=Timeline)](https://www.star-history.com/#gfazioli/mantine-video&Timeline)
-
