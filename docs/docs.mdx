@@ -1,0 +1,167 @@
+import { InstallScript } from './components/InstallScript/InstallScript';
+import { Table } from '@mantine/core';
+import * as demos from './demos';
+
+## Installation
+
+<InstallScript packages="@gfazioli/mantine-video" />
+
+After installation import package styles at the root of your application:
+
+```tsx
+import '@gfazioli/mantine-video/styles.css';
+```
+
+You can import styles within a layer `@layer mantine-video` by importing `@gfazioli/mantine-video/styles.layer.css` file.
+
+```tsx
+import '@gfazioli/mantine-video/styles.layer.css';
+```
+
+## Usage
+
+A video player built on the native HTML `<video>` element, themed with Mantine and composed of accessible building blocks. The default `<Video />` renders a control bar with play / pause, timeline, time display, volume and fullscreen. Use the configurator below to explore the props in real time.
+
+<Demo data={demos.configurator} />
+
+## Basic example
+
+The simplest usage: pass `src`, optionally `poster` and `aspectRatio` and you get a fully themed player out of the box. The control bar fades in on hover and auto-hides after a few seconds while playing.
+
+<Demo data={demos.basic} />
+
+## Custom controls
+
+The control bar is a compound component made of `<Video.PlayButton />`, `<Video.Timeline />`, `<Video.TimeDisplay />`, `<Video.MuteButton />`, `<Video.SkipButton />`, `<Video.CaptionsButton />`, `<Video.PiPButton />` and `<Video.FullscreenButton />`. Pass `controls={false}` to opt out of the default layout and compose your own.
+
+<Demo data={demos.customControls} />
+
+## Variants
+
+The component ships with four built-in variants. Each variant changes where and how the controls render relative to the video frame, but the API and sub-components stay identical — only `variant` changes.
+
+### overlay (default)
+
+Controls float on top of the video at the bottom, with a soft dark gradient backdrop. They fade in on hover and auto-hide after a few seconds while playing, just like a typical YouTube-style player. This is the right default when the player is the focal point of the page.
+
+<Demo data={demos.variantOverlay} />
+
+### minimal
+
+The controls are placed below the video frame in the regular page flow. No overlay, no auto-hide, no gradient. The controls use the standard Mantine surface colors so they integrate naturally with the rest of the UI. Useful when the video is one element among many (a list, a card grid, a chat thread) and you want the controls to feel like part of the surrounding UI rather than a player chrome.
+
+<Demo data={demos.variantMinimal} />
+
+### floating
+
+Same overlay behavior as `overlay`, but the control bar is rendered inside a rounded floating card with a blurred backdrop, slightly inset from the video edges. A bit more "premium" / glass-morphism feel, good for hero videos and media-rich landing pages.
+
+<Demo data={demos.variantFloating} />
+
+### bordered
+
+A hybrid: the container has a border and the controls are placed below the video (like `minimal`), but the whole player — frame + controls — is wrapped in a single bordered container. Best for embedding inside cards or wrapping a list of media items where you want a clearly delimited boundary.
+
+<Demo data={demos.variantBordered} />
+
+## Headless usage with useVideo
+
+When the compound API is not flexible enough, use the `useVideo` hook to manage state and build a fully custom UI. The hook returns the video state and a complete set of actions and refs.
+
+<Demo data={demos.headless} />
+
+```tsx
+const {
+  videoRef, containerRef,
+  playing, paused, ended, currentTime, duration, buffered,
+  volume, muted, playbackRate, fullscreen, pip, isLoading, error,
+  canPlay, canFullscreen, canPiP,
+  play, pause, toggle, seek, seekBy, setVolume, mute, unmute, toggleMute,
+  setPlaybackRate, requestFullscreen, exitFullscreen, toggleFullscreen,
+  requestPiP, exitPiP, togglePiP,
+} = useVideo();
+```
+
+## Picture-in-Picture
+
+The component supports the browser's native **Picture-in-Picture** API. When supported, the user can pop the video out into a floating, always-on-top window that survives tab switches and stays visible while they work in other apps.
+
+### How it works
+
+Three things are wired up out of the box:
+
+1. **`<Video.PiPButton />`** — an icon button in the default control bar. It calls `requestPictureInPicture()` / `exitPictureInPicture()` under the hood and self-hides if the browser does not expose the standard API (notably Firefox, which still uses its own native button).
+2. **Keyboard shortcut** — pressing <kbd>P</kbd> while the player has focus (and `shortcuts` is enabled) toggles PiP.
+3. **`useVideo` hook** — exposes `pip` state, `canPiP` capability and `requestPiP` / `exitPiP` / `togglePiP` actions so you can drive PiP from any UI.
+
+### Lifecycle callbacks
+
+The `Video` component accepts `onEnterPictureInPicture` and `onLeavePictureInPicture` callbacks. Use them to react to the user popping the video in and out — for example to dim a sidebar, change the page layout or show a "playing in PiP" indicator.
+
+<Demo data={demos.pictureInPicture} />
+
+### Browser support
+
+<Table withTableBorder striped="even" highlightOnHover verticalSpacing="xs">
+  <Table.Thead>
+    <Table.Tr>
+      <Table.Th>Browser</Table.Th>
+      <Table.Th>Support</Table.Th>
+    </Table.Tr>
+  </Table.Thead>
+  <Table.Tbody>
+    <Table.Tr>
+      <Table.Td>Chrome / Edge (desktop & Android)</Table.Td>
+      <Table.Td>Full standard API</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Safari macOS 14+</Table.Td>
+      <Table.Td>Full standard API</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Safari iOS 14+</Table.Td>
+      <Table.Td>Standard API, requires <code>playsInline</code> (default <code>true</code>)</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Firefox</Table.Td>
+      <Table.Td>No standard API — uses its own button in the native controls. <code>Video.PiPButton</code> is hidden automatically.</Table.Td>
+    </Table.Tr>
+  </Table.Tbody>
+</Table>
+
+### Limits of the underlying API
+
+- Must be triggered by a user gesture (click, tap, key press). Programmatic auto-PiP is blocked by the browser.
+- Only **one PiP video at a time** per browser. Entering PiP on another video closes the previous one.
+- PiP window size is controlled by the user — the page cannot resize it.
+- Videos with DRM-protected content may opt out of PiP.
+
+## Keyboard shortcuts
+
+When `shortcuts` is enabled (default) and the player has focus:
+
+<Table withTableBorder striped="even" highlightOnHover verticalSpacing="xs">
+  <Table.Thead>
+    <Table.Tr>
+      <Table.Th>Key</Table.Th>
+      <Table.Th>Action</Table.Th>
+    </Table.Tr>
+  </Table.Thead>
+  <Table.Tbody>
+    <Table.Tr><Table.Td>Space / K</Table.Td><Table.Td>Toggle play / pause</Table.Td></Table.Tr>
+    <Table.Tr><Table.Td>Arrow Left</Table.Td><Table.Td>Seek -5 s</Table.Td></Table.Tr>
+    <Table.Tr><Table.Td>Arrow Right</Table.Td><Table.Td>Seek +5 s</Table.Td></Table.Tr>
+    <Table.Tr><Table.Td>J</Table.Td><Table.Td>Seek -10 s</Table.Td></Table.Tr>
+    <Table.Tr><Table.Td>L</Table.Td><Table.Td>Seek +10 s</Table.Td></Table.Tr>
+    <Table.Tr><Table.Td>Arrow Up / Down</Table.Td><Table.Td>Volume + / -</Table.Td></Table.Tr>
+    <Table.Tr><Table.Td>M</Table.Td><Table.Td>Toggle mute</Table.Td></Table.Tr>
+    <Table.Tr><Table.Td>F</Table.Td><Table.Td>Toggle fullscreen</Table.Td></Table.Tr>
+    <Table.Tr><Table.Td>P</Table.Td><Table.Td>Toggle Picture-in-Picture</Table.Td></Table.Tr>
+  </Table.Tbody>
+</Table>
+
+## Styles API
+
+`Video` supports the full Mantine [Styles API](https://mantine.dev/styles/styles-api/). Use `classNames`, `styles`, `vars` and `unstyled` to customize the root container, the underlying `<video>` element and every sub-component (`controls`, `controlBar`, `playButton`, `timeline`, `timelineBuffered`, `timeDisplay`, `muteButton`, `fullscreenButton`, `pipButton`, `captionsButton`, `skipButton`). Use the interactive playground below to inspect every selector and CSS variable.
+
+<Demo data={demos.stylesApi} />

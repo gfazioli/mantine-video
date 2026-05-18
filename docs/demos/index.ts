@@ -1,0 +1,10 @@
+export { basic } from './Video.demo.basic';
+export { configurator } from './Video.demo.configurator';
+export { customControls } from './Video.demo.customControls';
+export { headless } from './Video.demo.headless';
+export { pictureInPicture } from './Video.demo.pictureInPicture';
+export { stylesApi } from './Video.demo.stylesApi';
+export { variantBordered } from './Video.demo.variantBordered';
+export { variantFloating } from './Video.demo.variantFloating';
+export { variantMinimal } from './Video.demo.variantMinimal';
+export { variantOverlay } from './Video.demo.variantOverlay';

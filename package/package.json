@@ -1,0 +1,61 @@
+{
+  "name": "@gfazioli/mantine-video",
+  "version": "0.0.1",
+  "description": "A customizable video player component for React built with Mantine. Compound API in Mantine ecosystem style, headless useVideo hook, theme-aware styling, accessibility, and full Styles API.",
+  "homepage": "https://gfazioli.github.io/mantine-video/",
+  "packageManager": "yarn@4.0.1",
+  "license": "MIT",
+  "author": "Giovambattista Fazioli <giovambattista.fazioli@gmail.com>",
+  "keywords": [
+    "mantine",
+    "mantine-ui",
+    "mantine-v8",
+    "react",
+    "react-component",
+    "typescript",
+    "extension",
+    "component",
+    "video",
+    "video-player",
+    "media-player",
+    "html5-video",
+    "react-video",
+    "react-video-player",
+    "captions",
+    "playback",
+    "fullscreen",
+    "picture-in-picture",
+    "a11y"
+  ],
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.mjs",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/types/index.d.mts",
+        "default": "./dist/esm/index.mjs"
+      },
+      "require": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/cjs/index.cjs"
+      }
+    },
+    "./styles.css": "./dist/styles.css",
+    "./styles.layer.css": "./dist/styles.layer.css"
+  },
+  "repository": "https://github.com/gfazioli/mantine-video.git",
+  "peerDependencies": {
+    "@mantine/core": ">=7.0.0",
+    "@mantine/hooks": ">=7.0.0",
+    "@tabler/icons-react": ">=3.0.0",
+    "react": "^18.x || ^19.x",
+    "react-dom": "^18.x || ^19.x"
+  },
+  "peerDependenciesMeta": {
+    "@tabler/icons-react": {
+      "optional": true
+    }
+  },
+  "bugs": "https://github.com/gfazioli/mantine-video/issues"
+}

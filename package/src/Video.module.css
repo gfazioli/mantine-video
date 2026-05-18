@@ -1,0 +1,191 @@
+.root {
+  --video-color: var(--mantine-primary-color-filled);
+  --video-radius: var(--mantine-radius-md);
+  --video-bg: black;
+  --video-controls-bg: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.35) 60%,
+    transparent 100%
+  );
+  --video-controls-height: 44px;
+  --video-controls-text-color: white;
+  --video-timeline-color: var(--video-color);
+  --video-timeline-thumb-color: var(--video-color);
+
+  position: relative;
+  display: block;
+  background: var(--video-bg);
+  border-radius: var(--video-radius);
+  overflow: hidden;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+}
+
+.root:focus-visible {
+  outline: 2px solid var(--video-color);
+  outline-offset: 2px;
+}
+
+.root[data-fullscreen] {
+  border-radius: 0;
+}
+
+.root[data-variant='minimal'],
+.root[data-variant='bordered'] {
+  --video-controls-bg: transparent;
+  overflow: visible;
+  background: transparent;
+  cursor: default;
+}
+
+.root[data-variant='bordered'] {
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--video-radius);
+  overflow: hidden;
+}
+
+.root[data-variant='floating'] {
+  --video-controls-bg: transparent;
+}
+
+.video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: black;
+}
+
+.controls {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 12px 16px;
+  background: var(--video-controls-bg);
+  color: var(--video-controls-text-color);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: opacity 200ms ease, transform 200ms ease;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+}
+
+.controls[data-visible] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+[data-variant='floating'] > .controls {
+  inset: auto 12px 12px 12px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  border-radius: var(--mantine-radius-md);
+}
+
+[data-variant='bordered'] > .controls,
+[data-variant='minimal'] > .controls {
+  position: static;
+  background: var(--mantine-color-default);
+  color: var(--mantine-color-text);
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.controlBar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.playButton,
+.muteButton,
+.fullscreenButton,
+.pipButton,
+.captionsButton,
+.skipButton,
+.iconButton {
+  color: var(--video-controls-text-color);
+}
+
+.playButton:hover,
+.muteButton:hover,
+.fullscreenButton:hover,
+.pipButton:hover,
+.captionsButton:hover,
+.skipButton:hover,
+.iconButton:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+[data-variant='bordered'] .playButton,
+[data-variant='bordered'] .muteButton,
+[data-variant='bordered'] .fullscreenButton,
+[data-variant='bordered'] .pipButton,
+[data-variant='bordered'] .captionsButton,
+[data-variant='bordered'] .skipButton,
+[data-variant='bordered'] .iconButton,
+[data-variant='minimal'] .playButton,
+[data-variant='minimal'] .muteButton,
+[data-variant='minimal'] .fullscreenButton,
+[data-variant='minimal'] .pipButton,
+[data-variant='minimal'] .captionsButton,
+[data-variant='minimal'] .skipButton,
+[data-variant='minimal'] .iconButton {
+  color: var(--mantine-color-text);
+}
+
+[data-variant='bordered'] .playButton:hover,
+[data-variant='bordered'] .muteButton:hover,
+[data-variant='bordered'] .fullscreenButton:hover,
+[data-variant='bordered'] .pipButton:hover,
+[data-variant='bordered'] .captionsButton:hover,
+[data-variant='bordered'] .skipButton:hover,
+[data-variant='bordered'] .iconButton:hover,
+[data-variant='minimal'] .playButton:hover,
+[data-variant='minimal'] .muteButton:hover,
+[data-variant='minimal'] .fullscreenButton:hover,
+[data-variant='minimal'] .pipButton:hover,
+[data-variant='minimal'] .captionsButton:hover,
+[data-variant='minimal'] .skipButton:hover,
+[data-variant='minimal'] .iconButton:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.timeline {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0 4px;
+}
+
+.timelineBuffered {
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 4px;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 2px;
+  pointer-events: none;
+  transition: width 250ms linear;
+}
+
+[data-variant='bordered'] .timelineBuffered,
+[data-variant='minimal'] .timelineBuffered {
+  background: var(--mantine-color-default-hover);
+}
+
+.timeDisplay {
+  min-width: 88px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-variant='bordered'] .timeDisplay,
+[data-variant='minimal'] .timeDisplay {
+  color: var(--mantine-color-text);
+}
