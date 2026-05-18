@@ -8,7 +8,6 @@ export const highlights = [
     key: 'mantine-nextra-template',
     title: 'Mantine Nextra template',
     href: 'https://github.com/gfazioli/next-app-nextra-template',
-    new: true,
   },
   {
     key: 'mantine-extension-template',
