@@ -55,6 +55,31 @@
   width: 100%;
   height: 100%;
   background: black;
+  object-fit: var(--video-object-fit, contain);
+}
+
+.root[data-as-background] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  overflow: hidden;
+  cursor: default;
+}
+
+.backgroundMuteButton {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  backdrop-filter: blur(8px);
+  z-index: 2;
+}
+
+.backgroundMuteButton:hover {
+  background: rgba(0, 0, 0, 0.7);
 }
 
 .controls {

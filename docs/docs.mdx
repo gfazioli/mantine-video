@@ -82,6 +82,30 @@ const {
 } = useVideo();
 ```
 
+## Background video
+
+The component can also be used as a **section or full-page background** — the kind of immersive hero you see on modern landing pages. The `asBackground` prop turns the player into an absolute-positioned, cover-cropped element ready to drop inside any positioned parent.
+
+```tsx
+<Box pos="relative" h="100vh">
+  <Video src="..." asBackground autoPlay muted loop />
+  {/* Your hero content overlaid on top */}
+</Box>
+```
+
+When `asBackground` is `true` the component:
+
+- positions itself absolutely (`position: absolute; inset: 0`) inside its parent
+- applies `object-fit: cover` to the underlying `<video>` element
+- disables `controls`, `clickToToggle`, `shortcuts`, `doubleClickToFullscreen` and `autoHideControls` as defaults (you can still re-enable any of them explicitly)
+- renders a discreet floating mute button in the bottom-right corner, controllable via the `backgroundMuteButton` prop (default `true`)
+
+For finer control, the standalone `fit` prop accepts `'cover' | 'contain' | 'fill' | 'none' | 'scale-down'` and maps directly to CSS `object-fit` on the `<video>` element.
+
+> [!note]
+>
+> → [Open the **fullscreen** demo page](/mantine-video/fullscreen) → [Open the **homepage-style** demo page](/mantine-video/homepage) (both pages live outside the docs layout, full‑bleed)
+
 ## Picture-in-Picture
 
 The component supports the browser's native **Picture-in-Picture** API. When supported, the user can pop the video out into a floating, always-on-top window that survives tab switches and stays visible while they work in other apps.

@@ -49,7 +49,8 @@ export type VideoStylesNames =
   | 'pipButton'
   | 'captionsButton'
   | 'skipButton'
-  | 'iconButton';
+  | 'iconButton'
+  | 'backgroundMuteButton';
 
 export type VideoCssVariables = {
   root:
@@ -150,6 +151,32 @@ export interface VideoBaseProps {
 
   /** Called when fullscreen state changes */
   onFullscreenChange?: (fullscreen: boolean) => void;
+
+  /**
+   * `object-fit` applied to the underlying `<video>` element. Use `'cover'` to crop
+   * the video so it fills the container (typical for background usage). Default `'contain'`.
+   */
+  fit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
+
+  /**
+   * Convenience preset for using the player as a section / page background. When `true`
+   * the component:
+   * - positions itself absolutely (`position: absolute; inset: 0`) to fill its parent
+   * - sets `object-fit: cover` on the `<video>` element (overrides `fit`)
+   * - disables `controls`, `clickToToggle`, `shortcuts`, `doubleClickToFullscreen`,
+   *   `autoHideControls` *as defaults* (you can still re-enable them explicitly)
+   *
+   * Wrap the player in a positioned parent of the size you want — e.g.
+   * `<Box pos="relative" h="100vh">` for a full-viewport hero.
+   */
+  asBackground?: boolean;
+
+  /**
+   * When `asBackground` is `true`, render a small floating mute toggle in the bottom-right
+   * corner so users can opt in/out of audio. Default `true` — pass `false` to hide it
+   * (e.g. if you want to manage audio yourself via children or controlled state).
+   */
+  backgroundMuteButton?: boolean;
 }
 
 export interface VideoProps
@@ -178,35 +205,35 @@ export type VideoFactory = Factory<{
 }>;
 
 const defaultProps: Partial<VideoProps> = {
-  controls: true,
   color: 'blue',
   radius: 'md',
   size: 'md',
   variant: 'overlay',
   preload: 'metadata',
   playsInline: true,
-  shortcuts: true,
-  clickToToggle: true,
-  doubleClickToFullscreen: true,
-  autoHideControls: 3000,
+  fit: 'contain',
+  backgroundMuteButton: true,
 };
 
-const varsResolver = createVarsResolver<VideoFactory>((theme, { color, radius }) => {
-  const themeColor = getThemeColor(color, theme);
-  return {
-    root: {
-      '--video-color': themeColor,
-      '--video-radius': radius === undefined ? undefined : getRadius(radius),
-      '--video-bg': 'black',
-      '--video-controls-bg':
-        'linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 60%, transparent 100%)',
-      '--video-controls-height': '44px',
-      '--video-controls-text-color': 'white',
-      '--video-timeline-color': themeColor,
-      '--video-timeline-thumb-color': themeColor,
-    },
-  };
-});
+const varsResolver = createVarsResolver<VideoFactory>(
+  (theme, { color, radius, fit, asBackground }) => {
+    const themeColor = getThemeColor(color, theme);
+    return {
+      root: {
+        '--video-color': themeColor,
+        '--video-radius': radius === undefined ? undefined : getRadius(radius),
+        '--video-bg': 'black',
+        '--video-controls-bg':
+          'linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 60%, transparent 100%)',
+        '--video-controls-height': '44px',
+        '--video-controls-text-color': 'white',
+        '--video-timeline-color': themeColor,
+        '--video-timeline-thumb-color': themeColor,
+        '--video-object-fit': asBackground ? 'cover' : fit ?? 'contain',
+      },
+    };
+  }
+);
 
 export const Video = factory<VideoFactory>((_props) => {
   const props = useProps('Video', defaultProps, _props);
@@ -214,7 +241,7 @@ export const Video = factory<VideoFactory>((_props) => {
     ref,
     src,
     poster,
-    controls,
+    controls: _controls,
     autoPlay,
     muted,
     loop,
@@ -231,10 +258,6 @@ export const Video = factory<VideoFactory>((_props) => {
     color: _color,
     radius: _radius,
     aspectRatio,
-    shortcuts,
-    clickToToggle,
-    doubleClickToFullscreen,
-    autoHideControls,
     size,
     variant,
     onEnded,
@@ -242,6 +265,9 @@ export const Video = factory<VideoFactory>((_props) => {
     onEnterPictureInPicture,
     onLeavePictureInPicture,
     onFullscreenChange,
+    fit: _fit,
+    asBackground,
+    backgroundMuteButton,
     children,
     classNames,
     style,
@@ -252,6 +278,14 @@ export const Video = factory<VideoFactory>((_props) => {
     mod,
     ...others
   } = props;
+
+  // Background mode flips a few interactive defaults — only when the user has not
+  // explicitly opted into them via raw props.
+  const controls = _props.controls ?? !asBackground;
+  const shortcuts = _props.shortcuts ?? !asBackground;
+  const clickToToggle = _props.clickToToggle ?? !asBackground;
+  const doubleClickToFullscreen = _props.doubleClickToFullscreen ?? !asBackground;
+  const autoHideControls = _props.autoHideControls ?? (asBackground ? 0 : 3000);
 
   const getStyles = useStyles<VideoFactory>({
     name: 'Video',
@@ -421,6 +455,7 @@ export const Video = factory<VideoFactory>((_props) => {
             ended: video.ended,
             fullscreen: video.fullscreen,
             'controls-visible': controlsVisible,
+            'as-background': asBackground,
           },
           mod,
         ]}
@@ -447,6 +482,9 @@ export const Video = factory<VideoFactory>((_props) => {
           playsInline={playsInline}
           preload={preload}
         />
+        {asBackground && backgroundMuteButton && (
+          <VideoMuteButton {...getStyles('backgroundMuteButton')} />
+        )}
         {children ?? (controls && <VideoControls />)}
       </Box>
     </VideoProvider>
