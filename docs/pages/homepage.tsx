@@ -177,9 +177,9 @@ export default function HomepagePage() {
         </Container>
       </Box>
 
-      {/* SHOWCASE SECTION — 70vh with a different video (aquarium reef) for visual variety */}
+      {/* SHOWCASE SECTION — 70vh with the showcase clip for visual variety */}
       <Box pos="relative" h="70vh" style={{ overflow: 'hidden' }}>
-        <Video src={v.aquarium} poster={v.aquariumPoster} asBackground autoPlay muted loop />
+        <Video src={v.showcase} poster={v.showcasePoster} asBackground autoPlay muted loop />
 
         <Box
           pos="absolute"
@@ -253,9 +253,9 @@ export default function HomepagePage() {
         </Container>
       </Box>
 
-      {/* CTA SECTION — closes the page with the manta again (visual bookend) */}
+      {/* CTA SECTION — closes the page with a third clip (aquarium) for variety */}
       <Box pos="relative" h="60vh" style={{ overflow: 'hidden' }}>
-        <Video src={v.manta} poster={v.mantaPoster} asBackground autoPlay muted loop />
+        <Video src={v.aquarium} poster={v.aquariumPoster} asBackground autoPlay muted loop />
 
         <Box
           pos="absolute"
