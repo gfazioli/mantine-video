@@ -18,14 +18,12 @@ function Demo() {
 
 function Demo(props: any) {
   return (
-    <div style={{ maxWidth: 640, margin: '0 auto', width: '100%' }}>
-      <Video
-        src="https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4"
-        poster="https://archive.org/services/img/mantas-in-3-minutes"
-        aspectRatio={16 / 9}
-        {...props}
-      />
-    </div>
+    <Video
+      src="https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4"
+      poster="https://archive.org/services/img/mantas-in-3-minutes"
+      aspectRatio={16 / 9}
+      {...props}
+    />
   );
 }
 
@@ -35,4 +33,5 @@ export const stylesApi: MantineDemo = {
   component: Demo,
   code,
   centered: true,
+  maxWidth: 560,
 };
