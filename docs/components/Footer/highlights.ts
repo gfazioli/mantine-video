@@ -1,10 +1,5 @@
 export const highlights = [
   {
-    key: 'undolog',
-    title: 'News',
-    href: 'https://undolog.com',
-  },
-  {
     key: 'mantine-extensions',
     title: 'Mantine Extensions HUB',
     href: 'https://mantine-extensions.vercel.app',
