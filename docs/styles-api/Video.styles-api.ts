@@ -21,6 +21,8 @@ export const VideoStylesApi: StylesApiData<VideoFactory> = {
     captionsButton: 'Captions toggle button',
     skipButton: 'Skip forward / backward button',
     iconButton: 'Generic icon button selector used by all icon-only controls',
+    backgroundMuteButton:
+      'Floating mute toggle rendered in the bottom-right corner when `asBackground` is enabled (controlled by the `backgroundMuteButton` prop)',
   },
 
   vars: {

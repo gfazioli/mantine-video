@@ -81,7 +81,7 @@ export default function HomepagePage() {
         />
 
         <ActionIcon
-          component={Anchor}
+          component="a"
           href="/mantine-video"
           size="lg"
           variant="default"
@@ -197,7 +197,7 @@ export default function HomepagePage() {
           h="100%"
           style={{ zIndex: 2, display: 'flex', alignItems: 'center' }}
         >
-          <Grid w="100%" gutter="xl">
+          <Grid w="100%" gap="xl">
             <Grid.Col span={{ base: 12, md: 7 }}>
               <Stack gap="lg" c="white" maw={560}>
                 <Badge color="cyan" variant="light">

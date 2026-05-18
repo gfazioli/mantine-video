@@ -33,7 +33,7 @@ export default function FullscreenPage() {
 
       {/* Back to docs */}
       <ActionIcon
-        component={Anchor}
+        component="a"
         href="/mantine-video"
         size="lg"
         variant="default"
