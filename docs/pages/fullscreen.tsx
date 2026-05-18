@@ -12,14 +12,13 @@ import {
 } from '@mantine/core';
 import { IconArrowLeft, IconBrandGithub, IconBrandNpm } from '@tabler/icons-react';
 import { Video } from '@gfazioli/mantine-video';
-
-const VIDEO_SRC = 'https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4';
-const VIDEO_POSTER = 'https://archive.org/services/img/mantas-in-3-minutes';
+import { useSampleVideos } from '../lib/sample-videos';
 
 export default function FullscreenPage() {
+  const v = useSampleVideos();
   return (
     <Box pos="relative" h="100vh" w="100vw" style={{ overflow: 'hidden' }}>
-      <Video src={VIDEO_SRC} poster={VIDEO_POSTER} asBackground autoPlay muted loop />
+      <Video src={v.manta} poster={v.mantaPoster} asBackground autoPlay muted loop />
 
       {/* Dark gradient overlay for readability */}
       <Box

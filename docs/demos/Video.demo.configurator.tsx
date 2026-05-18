@@ -1,13 +1,12 @@
 import { Video } from '@gfazioli/mantine-video';
 import { MantineDemo } from '@mantinex/demo';
-
-const VIDEO_SRC = 'https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4';
-const VIDEO_POSTER = 'https://archive.org/services/img/mantas-in-3-minutes';
+import { useSampleVideos } from '../lib/sample-videos';
 
 function Wrapper(props: any) {
+  const v = useSampleVideos();
   return (
     <div style={{ maxWidth: 640, margin: '0 auto', width: '100%' }}>
-      <Video src={VIDEO_SRC} poster={VIDEO_POSTER} {...props} />
+      <Video src={v.manta} poster={v.mantaPoster} {...props} />
     </div>
   );
 }
@@ -18,8 +17,8 @@ import { Video } from '@gfazioli/mantine-video';
 function Demo() {
   return (
     <Video
-      src="https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4"
-      poster="https://archive.org/services/img/mantas-in-3-minutes"
+      src="/videos/manta.mp4"
+      poster="/videos/manta-poster.jpg"
       aspectRatio={{{aspectRatio}}}
       variant="{{variant}}"
       color="{{color}}"

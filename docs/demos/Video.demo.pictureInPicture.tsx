@@ -3,6 +3,7 @@ import { IconPictureInPicture, IconPictureInPictureOn } from '@tabler/icons-reac
 import { useState } from 'react';
 import { Video } from '@gfazioli/mantine-video';
 import { MantineDemo } from '@mantinex/demo';
+import { useSampleVideos } from '../lib/sample-videos';
 
 const code = `
 import { useState } from 'react';
@@ -28,8 +29,8 @@ function Demo() {
       </Alert>
 
       <Video
-        src="https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4"
-        poster="https://archive.org/services/img/mantas-in-3-minutes"
+        src="/videos/manta.mp4"
+        poster="/videos/manta-poster.jpg"
         aspectRatio={16 / 9}
         onEnterPictureInPicture={() => setPipActive(true)}
         onLeavePictureInPicture={() => setPipActive(false)}
@@ -40,6 +41,7 @@ function Demo() {
 `;
 
 function Demo() {
+  const v = useSampleVideos();
   const [pipActive, setPipActive] = useState(false);
 
   return (
@@ -58,8 +60,8 @@ function Demo() {
       </Alert>
 
       <Video
-        src="https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4"
-        poster="https://archive.org/services/img/mantas-in-3-minutes"
+        src={v.manta}
+        poster={v.mantaPoster}
         aspectRatio={16 / 9}
         onEnterPictureInPicture={() => setPipActive(true)}
         onLeavePictureInPicture={() => setPipActive(false)}

@@ -27,14 +27,7 @@ import {
   IconWand,
 } from '@tabler/icons-react';
 import { Video } from '@gfazioli/mantine-video';
-
-const MANTA_VIDEO = 'https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4';
-const MANTA_POSTER = 'https://archive.org/services/img/mantas-in-3-minutes';
-
-// Charleston Aquarium stock footage — CC0 public domain, ~37s, colourful tropical fish
-const AQUARIUM_VIDEO =
-  'https://archive.org/download/aquarium-stock-video/CharlestonAquariumStockVideo-079.mp4';
-const AQUARIUM_POSTER = 'https://archive.org/services/img/aquarium-stock-video';
+import { useSampleVideos } from '../lib/sample-videos';
 
 const features = [
   {
@@ -70,11 +63,12 @@ const features = [
 ];
 
 export default function HomepagePage() {
+  const v = useSampleVideos();
   return (
     <Box bg="black">
       {/* HERO SECTION — full viewport video background (manta footage) */}
       <Box pos="relative" h="100vh" style={{ overflow: 'hidden' }}>
-        <Video src={MANTA_VIDEO} poster={MANTA_POSTER} asBackground autoPlay muted loop />
+        <Video src={v.manta} poster={v.mantaPoster} asBackground autoPlay muted loop />
 
         <Box
           pos="absolute"
@@ -185,7 +179,7 @@ export default function HomepagePage() {
 
       {/* SHOWCASE SECTION — 70vh with a different video (aquarium reef) for visual variety */}
       <Box pos="relative" h="70vh" style={{ overflow: 'hidden' }}>
-        <Video src={AQUARIUM_VIDEO} poster={AQUARIUM_POSTER} asBackground autoPlay muted loop />
+        <Video src={v.aquarium} poster={v.aquariumPoster} asBackground autoPlay muted loop />
 
         <Box
           pos="absolute"
@@ -261,7 +255,7 @@ export default function HomepagePage() {
 
       {/* CTA SECTION — closes the page with the manta again (visual bookend) */}
       <Box pos="relative" h="60vh" style={{ overflow: 'hidden' }}>
-        <Video src={MANTA_VIDEO} poster={MANTA_POSTER} asBackground autoPlay muted loop />
+        <Video src={v.manta} poster={v.mantaPoster} asBackground autoPlay muted loop />
 
         <Box
           pos="absolute"

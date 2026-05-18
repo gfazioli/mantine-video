@@ -1,5 +1,6 @@
 import { Video } from '@gfazioli/mantine-video';
 import { MantineDemo } from '@mantinex/demo';
+import { useSampleVideos } from '../lib/sample-videos';
 import { VideoStylesApi } from '../styles-api/Video.styles-api';
 
 const code = `
@@ -8,8 +9,8 @@ import { Video } from '@gfazioli/mantine-video';
 function Demo() {
   return (
     <Video
-      src="https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4"
-      poster="https://archive.org/services/img/mantas-in-3-minutes"
+      src="/videos/manta.mp4"
+      poster="/videos/manta-poster.jpg"
       aspectRatio={16 / 9}{{props}}
     />
   );
@@ -17,10 +18,11 @@ function Demo() {
 `;
 
 function Demo(props: any) {
+  const v = useSampleVideos();
   return (
     <Video
-      src="https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4"
-      poster="https://archive.org/services/img/mantas-in-3-minutes"
+      src={v.manta}
+      poster={v.mantaPoster}
       aspectRatio={16 / 9}
       {...props}
     />

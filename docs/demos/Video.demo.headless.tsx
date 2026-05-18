@@ -2,6 +2,7 @@ import { ActionIcon, Group, Slider, Text } from '@mantine/core';
 import { IconPlayerPauseFilled, IconPlayerPlayFilled } from '@tabler/icons-react';
 import { useVideo } from '@gfazioli/mantine-video';
 import { MantineDemo } from '@mantinex/demo';
+import { useSampleVideos } from '../lib/sample-videos';
 
 const code = `
 import { ActionIcon, Group, Slider, Text } from '@mantine/core';
@@ -14,7 +15,7 @@ function Demo() {
     <div>
       <video
         ref={video.videoRef}
-        src="https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4"
+        src="/videos/manta.mp4"
         style={{ width: '100%', aspectRatio: '16 / 9', background: 'black' }}
       />
 
@@ -41,14 +42,15 @@ function Demo() {
 `;
 
 function Demo() {
+  const v = useSampleVideos();
   const video = useVideo();
 
   return (
     <div style={{ maxWidth: 640, margin: '0 auto' }}>
       <video
         ref={video.videoRef}
-        src="https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4"
-        poster="https://archive.org/services/img/mantas-in-3-minutes"
+        src={v.manta}
+        poster={v.mantaPoster}
         style={{ width: '100%', aspectRatio: '16 / 9', background: 'black', borderRadius: 8 }}
       />
 
