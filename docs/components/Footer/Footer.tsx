@@ -19,14 +19,7 @@ import {
 import packageJson from '../../../package/package.json';
 import { Logo } from '../Shell';
 import { AnimateBadge } from './AnimateBadge';
-import {
-  apps,
-  highlights,
-  mantineComponentCategories,
-  publications,
-  reactComponents,
-  resources,
-} from './links';
+import { apps, highlights, mantineComponentCategories, resources } from './links';
 import classes from './Footer.module.css';
 
 type FooterProps = {};
@@ -135,21 +128,8 @@ export const Footer: React.FC<FooterProps> = () => {
 
           <Grid.Col className={classes.column} span={{ base: 6, sm: 2 }}>
             <Stack gap="xs">
-              <ColumnTitle>PUBLICATIONS</ColumnTitle>
-              <VerticalLinks list={publications} />
-            </Stack>
-          </Grid.Col>
-
-          <Grid.Col className={classes.column} span={{ base: 6, sm: 2 }}>
-            <Stack gap="md">
-              <Stack gap="xs">
-                <ColumnTitle>APPS</ColumnTitle>
-                <VerticalLinks list={apps} />
-              </Stack>
-              <Stack gap="xs">
-                <ColumnTitle>REACT COMPONENTS</ColumnTitle>
-                <VerticalLinks list={reactComponents} fz={12} />
-              </Stack>
+              <ColumnTitle>APPS</ColumnTitle>
+              <VerticalLinks list={apps} />
             </Stack>
           </Grid.Col>
         </Grid>
@@ -158,7 +138,7 @@ export const Footer: React.FC<FooterProps> = () => {
 
         {/* Second tier — Mantine Components grouped by category */}
         <Stack gap="md">
-          <ColumnTitle>MANTINE COMPONENTS</ColumnTitle>
+          <ColumnTitle>OTHER MANTINE EXTENSIONS</ColumnTitle>
           <Grid grow>
             {mantineComponentCategories.map((cat) => (
               <Grid.Col key={cat.key} className={classes.column} span={{ base: 6, sm: 3 }}>
