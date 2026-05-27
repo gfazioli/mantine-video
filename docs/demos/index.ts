@@ -3,6 +3,7 @@ export { configurator } from './Video.demo.configurator';
 export { customControls } from './Video.demo.customControls';
 export { headless } from './Video.demo.headless';
 export { pictureInPicture } from './Video.demo.pictureInPicture';
+export { sources } from './Video.demo.sources';
 export { stylesApi } from './Video.demo.stylesApi';
 export { variantBordered } from './Video.demo.variantBordered';
 export { variantFloating } from './Video.demo.variantFloating';
