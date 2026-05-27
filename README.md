@@ -32,6 +32,7 @@ It requires **Mantine 9.x** and **React 19**.
 - ⌨️ **Keyboard shortcuts** — Space / K (play/pause), J / L (±10s), ←/→ (±5s), ↑/↓ (volume), M (mute), F (fullscreen), P (PiP)
 - 🖥️ **Fullscreen + Picture‑in‑Picture** out of the box, capability‑aware
 - 🗣️ **Captions / subtitles** via native `<track>` — toggle button auto‑hides when no tracks present
+- 🔀 **Multiple sources** — pass a `sources` array to ship several formats/codecs and let the browser pick the first it can play (each entry supports `type` and `media`), with `fallbackSrc` loaded if every source fails at runtime
 - 🎛️ **Controlled + uncontrolled** for `playing`, `currentTime`, `volume`, `playbackRate`
 - ♿ **Accessibility** — ARIA labels, `aria-pressed` toggles, focus‑visible outlines
 - 📦 **TypeScript** — full type safety, every prop documented
