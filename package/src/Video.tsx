@@ -64,9 +64,48 @@ export type VideoCssVariables = {
     | '--video-timeline-thumb-color';
 };
 
+/**
+ * A single entry in the {@link VideoBaseProps.sources} list — rendered as a
+ * native `<source>` child of the `<video>` element. The browser picks the
+ * first one it can play (optionally narrowed by `media`), which is the
+ * standard cross-browser / adaptive-delivery mechanism.
+ */
+export interface VideoSource {
+  /** Source URL. */
+  src: string;
+
+  /**
+   * MIME type (and optional codecs), e.g. `'video/webm'`,
+   * `'video/mp4; codecs="avc1.42E01E"'`. Lets the browser skip formats it
+   * can't decode without fetching them.
+   */
+  type?: string;
+
+  /**
+   * Optional media query for adaptive selection, e.g. `'(max-width: 600px)'`.
+   * The browser uses the first source whose `media` matches (entries without
+   * `media` always match).
+   */
+  media?: string;
+}
+
 export interface VideoBaseProps {
-  /** Video source URL */
+  /** Single video source URL. Ignored when `sources` is provided. */
   src?: string;
+
+  /**
+   * Multiple sources rendered as `<source>` children. The browser selects
+   * the first playable entry (cross-browser / adaptive streaming). Takes
+   * precedence over `src` when non-empty.
+   */
+  sources?: VideoSource[];
+
+  /**
+   * Fallback URL loaded when every `src` / `sources` entry fails at runtime
+   * (404, decode error, …). Mirrors Mantine `Image`'s `fallbackSrc`. Tried
+   * at most once per mount.
+   */
+  fallbackSrc?: string;
 
   /** Poster image displayed before playback starts */
   poster?: string;
@@ -240,6 +279,8 @@ export const Video = factory<VideoFactory>((_props) => {
   const {
     ref,
     src,
+    sources,
+    fallbackSrc,
     poster,
     controls: _controls,
     autoPlay,
@@ -319,6 +360,31 @@ export const Video = factory<VideoFactory>((_props) => {
     onLeavePictureInPicture,
     onFullscreenChange,
   });
+
+  const hasSources = Array.isArray(sources) && sources.length > 0;
+
+  // Swap to `fallbackSrc` once if the primary source(s) fail to load. Guarded
+  // with a ref so a failing fallback doesn't loop; reset when the source set
+  // changes.
+  const triedFallbackRef = useRef(false);
+  useEffect(() => {
+    triedFallbackRef.current = false;
+  }, [src, sources, fallbackSrc]);
+
+  const handleSourceError = useCallback(() => {
+    if (!fallbackSrc || triedFallbackRef.current) {
+      return;
+    }
+    const el = video.videoRef.current;
+    if (!el) {
+      return;
+    }
+    triedFallbackRef.current = true;
+    el.removeAttribute('src');
+    el.querySelectorAll('source').forEach((node) => node.remove());
+    el.src = fallbackSrc;
+    el.load();
+  }, [fallbackSrc, video.videoRef]);
 
   const [controlsVisible, setControlsVisible] = useState(true);
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -474,14 +540,21 @@ export const Video = factory<VideoFactory>((_props) => {
             style: aspectRatio && flowControls ? { aspectRatio: String(aspectRatio) } : undefined,
           })}
           ref={video.videoRef}
-          src={src}
+          src={hasSources ? undefined : src}
           poster={poster}
           autoPlay={autoPlay}
           muted={muted}
           loop={loop}
           playsInline={playsInline}
           preload={preload}
-        />
+          onError={handleSourceError}
+        >
+          {hasSources
+            ? sources!.map((source, index) => (
+                <source key={index} src={source.src} type={source.type} media={source.media} />
+              ))
+            : null}
+        </video>
         {asBackground && backgroundMuteButton && (
           <VideoMuteButton {...getStyles('backgroundMuteButton')} />
         )}

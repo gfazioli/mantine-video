@@ -4,6 +4,7 @@ export type {
   VideoCssVariables,
   VideoFactory,
   VideoProps,
+  VideoSource,
   VideoStylesNames,
   VideoVariant,
 } from './Video';

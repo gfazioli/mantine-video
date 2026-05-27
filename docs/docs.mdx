@@ -30,6 +30,25 @@ The simplest usage: pass `src`, optionally `poster` and `aspectRatio` and you ge
 
 <Demo data={demos.basic} />
 
+## Multiple sources
+
+Pass an array of `sources` instead of a single `src` to ship several formats and let the browser pick the first one it can play — the standard cross-browser / adaptive-delivery mechanism. Each entry renders as a native `<source>` element with an optional `type` (MIME, lets the browser skip formats it can't decode) and `media` (a media query for resolution-based selection).
+
+```tsx
+<Video
+  sources={[
+    { src: '/clip.webm', type: 'video/webm' },
+    { src: '/clip.mp4', type: 'video/mp4' },
+    { src: '/clip-sd.mp4', type: 'video/mp4', media: '(max-width: 600px)' },
+  ]}
+  fallbackSrc="/clip.mp4"
+/>
+```
+
+`fallbackSrc` mirrors Mantine `Image`: it is loaded once if every `sources` entry fails at runtime (404, decode error). `sources` takes precedence over `src` when non-empty.
+
+<Demo data={demos.sources} />
+
 ## Custom controls
 
 The control bar is a compound component made of `<Video.PlayButton />`, `<Video.Timeline />`, `<Video.TimeDisplay />`, `<Video.MuteButton />`, `<Video.SkipButton />`, `<Video.CaptionsButton />`, `<Video.PiPButton />` and `<Video.FullscreenButton />`. Pass `controls={false}` to opt out of the default layout and compose your own.
