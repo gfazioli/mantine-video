@@ -307,6 +307,13 @@ export const Video = factory<VideoFactory>((_props) => {
     onLeavePictureInPicture,
     onFullscreenChange,
     fit: _fit,
+    // Pulled out so they don't leak onto the root DOM element via `...others`.
+    // The effective values are derived from `_props.*` below (background mode
+    // flips their defaults), so the destructured copies are intentionally unused.
+    shortcuts: _shortcuts,
+    clickToToggle: _clickToToggle,
+    doubleClickToFullscreen: _doubleClickToFullscreen,
+    autoHideControls: _autoHideControls,
     asBackground,
     backgroundMuteButton,
     children,
