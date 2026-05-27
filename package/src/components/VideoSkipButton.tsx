@@ -1,12 +1,10 @@
-import React from 'react';
-import { forwardRef } from 'react';
-import { IconRewindBackward10, IconRewindForward10 } from '@tabler/icons-react';
 import { ActionIcon, Tooltip, type ActionIconProps, type ElementProps } from '@mantine/core';
+import { IconRewindBackward10, IconRewindForward10 } from '@tabler/icons-react';
+import React, { forwardRef } from 'react';
 import { useVideoContext } from '../Video.context';
 
 export interface VideoSkipButtonProps
-  extends ActionIconProps,
-    ElementProps<'button', keyof ActionIconProps | 'children'> {
+  extends ActionIconProps, ElementProps<'button', keyof ActionIconProps | 'children'> {
   /** Seconds to skip. Negative = backward, positive = forward. Default `10`. */
   seconds?: number;
 
@@ -23,8 +21,8 @@ export const VideoSkipButton = forwardRef<HTMLButtonElement, VideoSkipButtonProp
     const forward = seconds >= 0;
     const tooltip = label ?? `${forward ? 'Forward' : 'Back'} ${Math.abs(seconds)}s`;
 
-    const renderedIcon = icon ??
-      (forward ? <IconRewindForward10 size={20} /> : <IconRewindBackward10 size={20} />);
+    const renderedIcon =
+      icon ?? (forward ? <IconRewindForward10 size={20} /> : <IconRewindBackward10 size={20} />);
 
     return (
       <Tooltip label={tooltip} withArrow openDelay={400}>

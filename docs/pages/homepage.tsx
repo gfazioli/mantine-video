@@ -1,3 +1,4 @@
+import { Video } from '@gfazioli/mantine-video';
 import {
   ActionIcon,
   Anchor,
@@ -26,7 +27,6 @@ import {
   IconShieldCheck,
   IconWand,
 } from '@tabler/icons-react';
-import { Video } from '@gfazioli/mantine-video';
 import { useSampleVideos } from '../lib/sample-videos';
 
 const features = [
@@ -53,7 +53,8 @@ const features = [
   {
     icon: IconDeviceTv,
     title: 'PiP + Fullscreen',
-    description: 'Built-in support with capability detection — buttons self-hide where unsupported.',
+    description:
+      'Built-in support with capability detection — buttons self-hide where unsupported.',
   },
   {
     icon: IconShieldCheck,
@@ -209,8 +210,8 @@ export default function HomepagePage() {
                 <Text fz={{ base: 16, md: 18 }} c="rgba(255,255,255,0.85)" lh={1.5}>
                   Pass <code>asBackground</code> and the component positions itself absolutely
                   inside its parent, applies <code>object-fit: cover</code>, disables all the
-                  interactive defaults, and renders a discreet mute toggle in the corner. Drop
-                  your content on top — text, CTAs, anything you like — and you're done.
+                  interactive defaults, and renders a discreet mute toggle in the corner. Drop your
+                  content on top — text, CTAs, anything you like — and you're done.
                 </Text>
                 <Group>
                   <Button
@@ -261,8 +262,7 @@ export default function HomepagePage() {
           pos="absolute"
           style={{
             inset: 0,
-            background:
-              'linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 100%)',
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 100%)',
             pointerEvents: 'none',
           }}
         />
@@ -306,8 +306,8 @@ export default function HomepagePage() {
                 rel="noopener"
               >
                 aquarium
-              </Anchor>
-              {' '}— Internet Archive
+              </Anchor>{' '}
+              — Internet Archive
             </Text>
           </Stack>
         </Container>

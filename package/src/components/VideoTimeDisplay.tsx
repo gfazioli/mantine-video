@@ -1,6 +1,5 @@
-import React from 'react';
-import { forwardRef } from 'react';
 import { Text, type TextProps } from '@mantine/core';
+import React, { forwardRef } from 'react';
 import { useVideoContext } from '../Video.context';
 
 export type VideoTimeDisplayFormat =

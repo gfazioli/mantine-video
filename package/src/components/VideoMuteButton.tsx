@@ -1,16 +1,10 @@
-import React from 'react';
-import { forwardRef } from 'react';
-import {
-  IconVolume,
-  IconVolume2,
-  IconVolume3,
-} from '@tabler/icons-react';
 import { ActionIcon, Tooltip, type ActionIconProps, type ElementProps } from '@mantine/core';
+import { IconVolume, IconVolume2, IconVolume3 } from '@tabler/icons-react';
+import React, { forwardRef } from 'react';
 import { useVideoContext } from '../Video.context';
 
 export interface VideoMuteButtonProps
-  extends ActionIconProps,
-    ElementProps<'button', keyof ActionIconProps> {
+  extends ActionIconProps, ElementProps<'button', keyof ActionIconProps> {
   muteLabel?: string;
   unmuteLabel?: string;
 }

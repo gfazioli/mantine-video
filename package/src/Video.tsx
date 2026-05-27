@@ -1,5 +1,3 @@
-import React from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Box,
   BoxProps,
@@ -16,6 +14,7 @@ import {
   type MantineRadius,
   type MantineSize,
 } from '@mantine/core';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { VideoCaptionsButton } from './components/VideoCaptionsButton';
 import { VideoControls } from './components/VideoControls';
 import { VideoFullscreenButton } from './components/VideoFullscreenButton';
@@ -219,7 +218,8 @@ export interface VideoBaseProps {
 }
 
 export interface VideoProps
-  extends BoxProps,
+  extends
+    BoxProps,
     VideoBaseProps,
     StylesApiProps<VideoFactory>,
     Omit<ElementProps<'div', keyof VideoBaseProps>, 'color' | 'onError'> {}
@@ -268,7 +268,7 @@ const varsResolver = createVarsResolver<VideoFactory>(
         '--video-controls-text-color': 'white',
         '--video-timeline-color': themeColor,
         '--video-timeline-thumb-color': themeColor,
-        '--video-object-fit': asBackground ? 'cover' : fit ?? 'contain',
+        '--video-object-fit': asBackground ? 'cover' : (fit ?? 'contain'),
       },
     };
   }
@@ -408,7 +408,10 @@ export const Video = factory<VideoFactory>((_props) => {
 
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
-      if (event.target !== event.currentTarget && (event.target as HTMLElement).tagName !== 'VIDEO') {
+      if (
+        event.target !== event.currentTarget &&
+        (event.target as HTMLElement).tagName !== 'VIDEO'
+      ) {
         return;
       }
       const now = Date.now();

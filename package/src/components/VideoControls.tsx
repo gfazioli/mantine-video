@@ -1,6 +1,5 @@
-import React from 'react';
-import { forwardRef, type ReactNode } from 'react';
 import { Box, type BoxProps } from '@mantine/core';
+import React, { forwardRef, type ReactNode } from 'react';
 import { useVideoContext } from '../Video.context';
 import { VideoCaptionsButton } from './VideoCaptionsButton';
 import { VideoFullscreenButton } from './VideoFullscreenButton';

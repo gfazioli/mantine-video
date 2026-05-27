@@ -1,12 +1,10 @@
-import React from 'react';
-import { forwardRef } from 'react';
-import { IconPlayerPauseFilled, IconPlayerPlayFilled } from '@tabler/icons-react';
 import { ActionIcon, Tooltip, type ActionIconProps, type ElementProps } from '@mantine/core';
+import { IconPlayerPauseFilled, IconPlayerPlayFilled } from '@tabler/icons-react';
+import React, { forwardRef } from 'react';
 import { useVideoContext } from '../Video.context';
 
 export interface VideoPlayButtonProps
-  extends ActionIconProps,
-    ElementProps<'button', keyof ActionIconProps> {
+  extends ActionIconProps, ElementProps<'button', keyof ActionIconProps> {
   playLabel?: string;
   pauseLabel?: string;
 }
@@ -29,11 +27,7 @@ export const VideoPlayButton = forwardRef<HTMLButtonElement, VideoPlayButtonProp
           {...ctx.getStyles('playButton')}
           {...others}
         >
-          {ctx.playing ? (
-            <IconPlayerPauseFilled size={20} />
-          ) : (
-            <IconPlayerPlayFilled size={20} />
-          )}
+          {ctx.playing ? <IconPlayerPauseFilled size={20} /> : <IconPlayerPlayFilled size={20} />}
         </ActionIcon>
       </Tooltip>
     );

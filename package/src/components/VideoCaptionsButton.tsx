@@ -1,12 +1,10 @@
-import React from 'react';
-import { forwardRef, useEffect, useState } from 'react';
-import { IconBadgeCc, IconBadgeCcFilled } from '@tabler/icons-react';
 import { ActionIcon, Tooltip, type ActionIconProps, type ElementProps } from '@mantine/core';
+import { IconBadgeCc, IconBadgeCcFilled } from '@tabler/icons-react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { useVideoContext } from '../Video.context';
 
 export interface VideoCaptionsButtonProps
-  extends ActionIconProps,
-    ElementProps<'button', keyof ActionIconProps> {
+  extends ActionIconProps, ElementProps<'button', keyof ActionIconProps> {
   enableLabel?: string;
   disableLabel?: string;
 }

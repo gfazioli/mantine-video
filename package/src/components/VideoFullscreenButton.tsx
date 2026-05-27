@@ -1,12 +1,10 @@
-import React from 'react';
-import { forwardRef } from 'react';
-import { IconMaximize, IconMinimize } from '@tabler/icons-react';
 import { ActionIcon, Tooltip, type ActionIconProps, type ElementProps } from '@mantine/core';
+import { IconMaximize, IconMinimize } from '@tabler/icons-react';
+import React, { forwardRef } from 'react';
 import { useVideoContext } from '../Video.context';
 
 export interface VideoFullscreenButtonProps
-  extends ActionIconProps,
-    ElementProps<'button', keyof ActionIconProps> {
+  extends ActionIconProps, ElementProps<'button', keyof ActionIconProps> {
   enterLabel?: string;
   exitLabel?: string;
 }
