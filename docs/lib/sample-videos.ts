@@ -16,6 +16,7 @@
 import { useRouter } from 'next/router';
 
 const MANTA_PATH = '/videos/manta.mp4';
+const MANTA_WEBM_PATH = '/videos/manta.webm';
 const MANTA_POSTER_PATH = '/videos/manta-poster.jpg';
 const SHOWCASE_PATH = '/videos/showcase.mp4';
 const SHOWCASE_POSTER_PATH = '/videos/showcase-poster.jpg';
@@ -30,6 +31,7 @@ function useAssetPath(path: string) {
 export function useSampleVideos() {
   return {
     manta: useAssetPath(MANTA_PATH),
+    mantaWebm: useAssetPath(MANTA_WEBM_PATH),
     mantaPoster: useAssetPath(MANTA_POSTER_PATH),
     showcase: useAssetPath(SHOWCASE_PATH),
     showcasePoster: useAssetPath(SHOWCASE_POSTER_PATH),

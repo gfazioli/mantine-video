@@ -27,9 +27,8 @@ function Demo() {
       <Video
         sources={[
           // The browser tries each entry in order and plays the first it
-          // can decode. We only ship an mp4 sample here, so the webm entry
-          // is skipped automatically.
-          { src: v.manta.replace('.mp4', '.webm'), type: 'video/webm' },
+          // can decode: VP9/webm where supported, falling back to H.264/mp4.
+          { src: v.mantaWebm, type: 'video/webm' },
           { src: v.manta, type: 'video/mp4' },
         ]}
         fallbackSrc={v.manta}
