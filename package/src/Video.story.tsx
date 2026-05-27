@@ -1,9 +1,8 @@
-import React from 'react';
 import { Paper, Stack, Text } from '@mantine/core';
+import React from 'react';
 import { Video, type VideoProps, type VideoVariant } from './Video';
 
-const SAMPLE_SRC =
-  'https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4';
+const SAMPLE_SRC = 'https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4';
 const SAMPLE_POSTER = 'https://archive.org/services/img/mantas-in-3-minutes';
 
 export default {

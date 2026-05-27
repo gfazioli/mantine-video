@@ -1,7 +1,7 @@
-import { ActionIcon, Group, Slider, Text } from '@mantine/core';
-import { IconPlayerPauseFilled, IconPlayerPlayFilled } from '@tabler/icons-react';
 import { useVideo } from '@gfazioli/mantine-video';
+import { ActionIcon, Group, Slider, Text } from '@mantine/core';
 import { MantineDemo } from '@mantinex/demo';
+import { IconPlayerPauseFilled, IconPlayerPlayFilled } from '@tabler/icons-react';
 import { useSampleVideos } from '../lib/sample-videos';
 
 const code = `
@@ -51,6 +51,7 @@ function Demo() {
         ref={video.videoRef}
         src={v.manta}
         poster={v.mantaPoster}
+        aria-label="Sample video"
         style={{ width: '100%', aspectRatio: '16 / 9', background: 'black', borderRadius: 8 }}
       />
 
@@ -70,7 +71,8 @@ function Demo() {
         />
 
         <Text size="sm" ff="monospace" miw={100} ta="right">
-          {video.currentTime.toFixed(1)}s / {Number.isFinite(video.duration) ? video.duration.toFixed(1) : '?'}s
+          {video.currentTime.toFixed(1)}s /{' '}
+          {Number.isFinite(video.duration) ? video.duration.toFixed(1) : '?'}s
         </Text>
       </Group>
     </div>

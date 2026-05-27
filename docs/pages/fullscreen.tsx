@@ -1,3 +1,4 @@
+import { Video } from '@gfazioli/mantine-video';
 import {
   ActionIcon,
   Anchor,
@@ -11,7 +12,6 @@ import {
   Title,
 } from '@mantine/core';
 import { IconArrowLeft, IconBrandGithub, IconBrandNpm } from '@tabler/icons-react';
-import { Video } from '@gfazioli/mantine-video';
 import { useSampleVideos } from '../lib/sample-videos';
 
 export default function FullscreenPage() {
@@ -64,8 +64,8 @@ export default function FullscreenPage() {
           </Title>
           <Text fz={{ base: 16, md: 20 }} maw={560} c="rgba(255,255,255,0.85)">
             Compound API, headless <code>useVideo</code> hook, full Styles API, four variants,
-            picture‑in‑picture, fullscreen, captions, keyboard shortcuts — and yes, it can also be
-            a background video like the one playing right now.
+            picture‑in‑picture, fullscreen, captions, keyboard shortcuts — and yes, it can also be a
+            background video like the one playing right now.
           </Text>
           <Group mt="md">
             <Button

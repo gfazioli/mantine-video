@@ -1,7 +1,7 @@
-import { createContext, useContext } from 'react';
 import type { GetStylesApi } from '@mantine/core';
-import type { VideoFactory } from './Video';
+import { createContext, useContext } from 'react';
 import type { UseVideoReturn } from './use-video';
+import type { VideoFactory } from './Video';
 
 export interface VideoContextValue extends UseVideoReturn {
   getStyles: GetStylesApi<VideoFactory>;

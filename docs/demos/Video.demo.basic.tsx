@@ -20,11 +20,7 @@ function Demo() {
   const v = useSampleVideos();
   return (
     <div style={{ maxWidth: 640, margin: '0 auto' }}>
-      <Video
-        src={v.manta}
-        poster={v.mantaPoster}
-        aspectRatio={16 / 9}
-      />
+      <Video src={v.manta} poster={v.mantaPoster} aspectRatio={16 / 9} />
     </div>
   );
 }

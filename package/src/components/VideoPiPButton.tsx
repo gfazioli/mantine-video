@@ -1,12 +1,10 @@
-import React from 'react';
-import { forwardRef } from 'react';
-import { IconPictureInPicture } from '@tabler/icons-react';
 import { ActionIcon, Tooltip, type ActionIconProps, type ElementProps } from '@mantine/core';
+import { IconPictureInPicture } from '@tabler/icons-react';
+import React, { forwardRef } from 'react';
 import { useVideoContext } from '../Video.context';
 
 export interface VideoPiPButtonProps
-  extends ActionIconProps,
-    ElementProps<'button', keyof ActionIconProps> {
+  extends ActionIconProps, ElementProps<'button', keyof ActionIconProps> {
   label?: string;
 }
 

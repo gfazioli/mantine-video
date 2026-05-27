@@ -1,6 +1,5 @@
-import React from 'react';
-import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 import { Box, Slider, type BoxProps, type SliderProps } from '@mantine/core';
+import React, { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 import { useVideoContext } from '../Video.context';
 
 export interface VideoTimelineProps extends Omit<BoxProps, 'onChange'> {
@@ -29,9 +28,12 @@ export const VideoTimeline = forwardRef<HTMLDivElement, VideoTimelineProps>(
     const value = scrubbing ?? ctx.currentTime;
     const bufferedPercent = max > 0 ? (ctx.buffered / max) * 100 : 0;
 
-    useEffect(() => () => {
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-    }, []);
+    useEffect(
+      () => () => {
+        if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+      },
+      []
+    );
 
     const handleChange = useCallback(
       (v: number) => {

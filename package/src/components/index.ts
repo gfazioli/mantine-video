@@ -1,9 +1,6 @@
 export { VideoCaptionsButton, type VideoCaptionsButtonProps } from './VideoCaptionsButton';
 export { VideoControls, type VideoControlsProps } from './VideoControls';
-export {
-  VideoFullscreenButton,
-  type VideoFullscreenButtonProps,
-} from './VideoFullscreenButton';
+export { VideoFullscreenButton, type VideoFullscreenButtonProps } from './VideoFullscreenButton';
 export { VideoMuteButton, type VideoMuteButtonProps } from './VideoMuteButton';
 export { VideoPiPButton, type VideoPiPButtonProps } from './VideoPiPButton';
 export { VideoPlayButton, type VideoPlayButtonProps } from './VideoPlayButton';

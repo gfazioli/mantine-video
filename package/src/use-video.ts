@@ -82,7 +82,8 @@ export function useVideo(options: UseVideoOptions = {}): UseVideoReturn {
     if (typeof document === 'undefined') return;
     setCanFullscreen(!!document.fullscreenEnabled);
     setCanPiP(
-      (document as Document & { pictureInPictureEnabled?: boolean }).pictureInPictureEnabled === true
+      (document as Document & { pictureInPictureEnabled?: boolean }).pictureInPictureEnabled ===
+        true
     );
   }, []);
 
@@ -351,9 +352,11 @@ export function useVideo(options: UseVideoOptions = {}): UseVideoReturn {
   }, []);
 
   const requestPiP = useCallback(async () => {
-    const v = videoRef.current as HTMLVideoElement & {
-      requestPictureInPicture?: () => Promise<void>;
-    } | null;
+    const v = videoRef.current as
+      | (HTMLVideoElement & {
+          requestPictureInPicture?: () => Promise<void>;
+        })
+      | null;
     if (!v?.requestPictureInPicture) return;
     await v.requestPictureInPicture();
   }, []);
@@ -378,9 +381,11 @@ export function useVideo(options: UseVideoOptions = {}): UseVideoReturn {
     if (doc.pictureInPictureElement && doc.exitPictureInPicture) {
       await doc.exitPictureInPicture();
     } else {
-      const v = videoRef.current as HTMLVideoElement & {
-        requestPictureInPicture?: () => Promise<void>;
-      } | null;
+      const v = videoRef.current as
+        | (HTMLVideoElement & {
+            requestPictureInPicture?: () => Promise<void>;
+          })
+        | null;
       if (v?.requestPictureInPicture) {
         await v.requestPictureInPicture();
       }

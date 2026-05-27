@@ -1,8 +1,8 @@
+import { Video } from '@gfazioli/mantine-video';
 import { Alert, Stack, Text } from '@mantine/core';
+import { MantineDemo } from '@mantinex/demo';
 import { IconPictureInPicture, IconPictureInPictureOn } from '@tabler/icons-react';
 import { useState } from 'react';
-import { Video } from '@gfazioli/mantine-video';
-import { MantineDemo } from '@mantinex/demo';
 import { useSampleVideos } from '../lib/sample-videos';
 
 const code = `
@@ -54,8 +54,7 @@ function Demo() {
       >
         <Text size="sm">
           Click the PiP button on the control bar (right before Fullscreen — it looks like a
-          rectangle with a corner cut out) or press the <kbd>P</kbd> key while the player has
-          focus.
+          rectangle with a corner cut out) or press the <kbd>P</kbd> key while the player has focus.
         </Text>
       </Alert>
 

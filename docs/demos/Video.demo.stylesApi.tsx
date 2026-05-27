@@ -19,14 +19,7 @@ function Demo() {
 
 function Demo(props: any) {
   const v = useSampleVideos();
-  return (
-    <Video
-      src={v.manta}
-      poster={v.mantaPoster}
-      aspectRatio={16 / 9}
-      {...props}
-    />
-  );
+  return <Video src={v.manta} poster={v.mantaPoster} aspectRatio={16 / 9} {...props} />;
 }
 
 export const stylesApi: MantineDemo = {

@@ -85,6 +85,10 @@ export default {
     'jsx-a11y/anchor-has-content': 'off',
     'jsx-a11y/anchor-is-valid': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
+    // The <video> element supports captions through the compound
+    // `<Video.Captions>` / `<Video.CaptionsButton>` API, not an inline
+    // <track>, so the raw-element caption rule is a false positive here.
+    'jsx-a11y/media-has-caption': 'off',
     'jsx-a11y/mouse-events-have-key-events': 'off',
     'jsx-a11y/no-autofocus': 'off',
 
