@@ -1,6 +1,6 @@
 {
   "name": "@gfazioli/mantine-video",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A customizable video player component for React built with Mantine. Compound API in Mantine ecosystem style, headless useVideo hook, theme-aware styling, accessibility, and full Styles API.",
   "homepage": "https://gfazioli.github.io/mantine-video/",
   "packageManager": "yarn@4.0.1",
