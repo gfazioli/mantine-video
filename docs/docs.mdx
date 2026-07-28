@@ -49,6 +49,35 @@ Pass an array of `sources` instead of a single `src` to ship several formats and
 
 <Demo data={demos.sources} />
 
+## Captions and subtitles
+
+Pass `tracks` to attach WebVTT text tracks. Each entry renders a native `<track>` inside the
+`<video>` element, so the browser paints the cues over the video itself and the CC button appears in
+the control bar.
+
+```tsx
+<Video
+  src="/clip.mp4"
+  tracks={[
+    { src: '/en.vtt', kind: 'captions', srcLang: 'en', label: 'English', default: true },
+    { src: '/it.vtt', kind: 'subtitles', srcLang: 'it', label: 'Italiano' },
+  ]}
+/>
+```
+
+`kind` defaults to `captions`. Use `captions` for viewers who cannot hear the audio — they include
+non-speech sound such as `[door slams]` — and `subtitles` for a translation of the dialogue. `default`
+starts a track visible without the user turning captions on. `descriptions`, `chapters` and
+`metadata` are accepted too.
+
+This is the only way to attach tracks: `children` render **outside** the media element, because that
+slot is the control bar, so a `<track>` placed there would never reach the `<video>`.
+
+<Demo data={demos.captions} />
+
+Captions are what makes `<Video.CaptionsButton />` appear — it hides itself when the player has no
+`captions` or `subtitles` track to toggle.
+
 ## Custom controls
 
 The control bar is a compound component made of `<Video.PlayButton />`, `<Video.Timeline />`, `<Video.TimeDisplay />`, `<Video.MuteButton />`, `<Video.SkipButton />`, `<Video.CaptionsButton />`, `<Video.PiPButton />` and `<Video.FullscreenButton />`. Pass `controls={false}` to opt out of the default layout and compose your own.

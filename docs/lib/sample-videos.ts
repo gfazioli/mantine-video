@@ -18,6 +18,7 @@ import { useRouter } from 'next/router';
 const MANTA_PATH = '/videos/manta.mp4';
 const MANTA_WEBM_PATH = '/videos/manta.webm';
 const MANTA_POSTER_PATH = '/videos/manta-poster.jpg';
+const MANTA_CAPTIONS_PATH = '/videos/manta-en.vtt';
 const SHOWCASE_PATH = '/videos/showcase.mp4';
 const SHOWCASE_POSTER_PATH = '/videos/showcase-poster.jpg';
 const AQUARIUM_PATH = '/videos/aquarium.mp4';
@@ -33,6 +34,7 @@ export function useSampleVideos() {
     manta: useAssetPath(MANTA_PATH),
     mantaWebm: useAssetPath(MANTA_WEBM_PATH),
     mantaPoster: useAssetPath(MANTA_POSTER_PATH),
+    mantaCaptions: useAssetPath(MANTA_CAPTIONS_PATH),
     showcase: useAssetPath(SHOWCASE_PATH),
     showcasePoster: useAssetPath(SHOWCASE_POSTER_PATH),
     aquarium: useAssetPath(AQUARIUM_PATH),
@@ -48,6 +50,7 @@ export function useSampleVideos() {
 export const SAMPLE_VIDEO_PATHS = {
   manta: MANTA_PATH,
   mantaPoster: MANTA_POSTER_PATH,
+  mantaCaptions: MANTA_CAPTIONS_PATH,
   showcase: SHOWCASE_PATH,
   showcasePoster: SHOWCASE_POSTER_PATH,
   aquarium: AQUARIUM_PATH,

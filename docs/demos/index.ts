@@ -1,4 +1,5 @@
 export { basic } from './Video.demo.basic';
+export { captions } from './Video.demo.captions';
 export { configurator } from './Video.demo.configurator';
 export { customControls } from './Video.demo.customControls';
 export { headless } from './Video.demo.headless';
