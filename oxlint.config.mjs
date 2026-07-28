@@ -11,9 +11,18 @@ export default defineConfig({
     // "multi-line" allows exactly what oxfmt emits while still requiring braces for multi-line
     // bodies. Do not drop this override when bumping oxc-config-mantine.
     curly: ['error', 'multi-line'],
-    // Repo-specific (carried over from the hand-maintained config): the <video> element
-    // supports captions through the compound `<Video.Captions>` / `<Video.CaptionsButton>`
-    // API, not an inline <track>, so the raw-element caption rule is a false positive here.
+    // Repo-specific. Captions ARE supported: the `tracks` prop renders one <track> per entry
+    // inside the <video> element (see Video.tsx and its "Text tracks" tests), which is what makes
+    // <Video.CaptionsButton /> appear. The rule still fires because it only inspects JSX
+    // statically and cannot see through the `tracks.map(...)` that produces those children.
+    //
+    // Verified 2026-07-28 by removing this override: the rule reports Video.tsx even with tracks
+    // rendered. It also reports Video.demo.headless.tsx, where a bare <video> is intentional —
+    // that demo exists to show driving a plain element with the useVideo hook.
+    //
+    // NOTE: the previous comment here claimed captions came from a compound
+    // `<Video.Captions>` / `<Video.CaptionsButton>` API. That was wrong — `Video.Captions` has
+    // never existed, and before the `tracks` prop there was no way to attach a track at all.
     'jsx-a11y/media-has-caption': 'off',
   },
   // Upstream ignores 'docs/out' and 'package/dist' but not 'docs/.next', which our docs sites have.

@@ -88,6 +88,31 @@ export interface VideoSource {
   media?: string;
 }
 
+/**
+ * Entry for the `tracks` prop. Renders one `<track>` child inside the underlying
+ * `<video>` element. The browser paints `captions`/`subtitles` cues over the video on
+ * its own — no extra rendering is needed on our side.
+ */
+export interface VideoTextTrack {
+  /** URL of the WebVTT (`.vtt`) file. */
+  src: string;
+
+  /**
+   * Track kind. `'captions'` (default) is for viewers who can't hear the audio and
+   * includes non-speech sound; `'subtitles'` is a translation of the dialogue.
+   */
+  kind?: 'captions' | 'subtitles' | 'descriptions' | 'chapters' | 'metadata';
+
+  /** BCP 47 language tag, e.g. `'en'`, `'it'`. Required by HTML for `subtitles`. */
+  srcLang?: string;
+
+  /** Human-readable name shown in the browser's track menu, e.g. `'English'`. */
+  label?: string;
+
+  /** Show this track by default, without the user turning captions on. */
+  default?: boolean;
+}
+
 export interface VideoBaseProps {
   /** Single video source URL. Ignored when `sources` is provided. */
   src?: string;
@@ -98,6 +123,20 @@ export interface VideoBaseProps {
    * precedence over `src` when non-empty.
    */
   sources?: VideoSource[];
+
+  /**
+   * Text tracks rendered as `<track>` children of the `<video>` element: captions,
+   * subtitles, descriptions or chapters.
+   *
+   * This is the only way to attach tracks — the component's `children` render *outside*
+   * the media element (that slot is the control bar), so a `<track>` passed there would
+   * never reach it.
+   *
+   * With at least one `captions`/`subtitles` track present, the browser renders the cues
+   * over the video itself and `<Video.CaptionsButton />` becomes visible, letting users
+   * toggle them.
+   */
+  tracks?: VideoTextTrack[];
 
   /**
    * Fallback URL loaded when every `src` / `sources` entry fails at runtime
@@ -280,6 +319,7 @@ export const Video = factory<VideoFactory>((_props) => {
     ref,
     src,
     sources,
+    tracks,
     fallbackSrc,
     poster,
     controls: _controls,
@@ -369,6 +409,7 @@ export const Video = factory<VideoFactory>((_props) => {
   });
 
   const hasSources = Array.isArray(sources) && sources.length > 0;
+  const hasTracks = Array.isArray(tracks) && tracks.length > 0;
 
   // Swap to `fallbackSrc` once if the primary source(s) fail to load. Guarded
   // with a ref so a failing fallback doesn't loop; reset when the source set
@@ -562,6 +603,18 @@ export const Video = factory<VideoFactory>((_props) => {
           {hasSources
             ? sources!.map((source, index) => (
                 <source key={index} src={source.src} type={source.type} media={source.media} />
+              ))
+            : null}
+          {hasTracks
+            ? tracks!.map((track, index) => (
+                <track
+                  key={`${track.src}-${index}`}
+                  src={track.src}
+                  kind={track.kind ?? 'captions'}
+                  srcLang={track.srcLang}
+                  label={track.label}
+                  default={track.default}
+                />
               ))
             : null}
         </video>

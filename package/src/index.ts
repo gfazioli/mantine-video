@@ -6,6 +6,7 @@ export type {
   VideoProps,
   VideoSource,
   VideoStylesNames,
+  VideoTextTrack,
   VideoVariant,
 } from './Video';
 

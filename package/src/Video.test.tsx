@@ -89,4 +89,61 @@ describe('Video', () => {
     expect(Video.CaptionsButton).toBeDefined();
     expect(Video.SkipButton).toBeDefined();
   });
+
+  // ─── Text tracks ────────────────────────────────────────────────────────────
+  //
+  // Before the `tracks` prop existed there was no way to attach a text track at all: the
+  // component's `children` render *outside* the media element (that slot is the control bar), so a
+  // consumer-supplied <track> never reached the <video> and `textTracks` stayed empty. That in turn
+  // meant Video.CaptionsButton could never show itself, since it bails out on `hasTracks === false`.
+  // These tests pin the contract that closes that gap.
+
+  it('renders tracks as <track> children of the <video> element', () => {
+    render(
+      <Video
+        src="/v.mp4"
+        tracks={[
+          { src: '/en.vtt', srcLang: 'en', label: 'English', default: true },
+          { src: '/it.vtt', kind: 'subtitles', srcLang: 'it', label: 'Italiano' },
+        ]}
+      />
+    );
+
+    // Inside the media element, not merely somewhere in the tree — that distinction is the bug.
+    const tracks = document.querySelectorAll('video > track');
+    expect(tracks).toHaveLength(2);
+
+    expect(tracks[0].getAttribute('src')).toBe('/en.vtt');
+    expect(tracks[0].getAttribute('srclang')).toBe('en');
+    expect(tracks[0].getAttribute('label')).toBe('English');
+    expect(tracks[0].hasAttribute('default')).toBe(true);
+
+    expect(tracks[1].getAttribute('kind')).toBe('subtitles');
+    expect(tracks[1].hasAttribute('default')).toBe(false);
+  });
+
+  it('defaults a track kind to captions', () => {
+    render(<Video src="/v.mp4" tracks={[{ src: '/en.vtt', srcLang: 'en' }]} />);
+    expect(document.querySelector('video > track')?.getAttribute('kind')).toBe('captions');
+  });
+
+  it('renders no track element when tracks is absent or empty', () => {
+    const { unmount } = render(<Video src="/v.mp4" />);
+    expect(document.querySelectorAll('video > track')).toHaveLength(0);
+    unmount();
+
+    render(<Video src="/v.mp4" tracks={[]} />);
+    expect(document.querySelectorAll('video > track')).toHaveLength(0);
+  });
+
+  it('renders both sources and tracks together', () => {
+    render(
+      <Video
+        sources={[{ src: '/v.webm', type: 'video/webm' }]}
+        tracks={[{ src: '/en.vtt', srcLang: 'en' }]}
+      />
+    );
+    expect(document.querySelectorAll('video > source')).toHaveLength(1);
+    expect(document.querySelectorAll('video > track')).toHaveLength(1);
+  });
 });
