@@ -30,17 +30,17 @@ Bootstrapped from `mantine-base-component` (the GitHub template for the Mantine 
 
 ### Workspace Layout
 
-Yarn workspaces monorepo with two workspaces: `package/` (npm package) and `docs/` (Next.js 15 documentation site).
+Yarn workspaces monorepo with two workspaces: `package/` (npm package) and `docs/` (Next.js 16 documentation site).
 
 ### Package Source (`package/src/`)
 
-- `Video.tsx` — Main component using `polymorphicFactory()` with Mantine's Styles API. Wraps a native `<video>` element with React-friendly props (controlled `playing`/`currentTime`/`volume`), variants (`overlay`/`minimal`/`floating`/`bordered`), and sizes.
+- `Video.tsx` — Main component using `polymorphicFactory()` with Mantine's Styles API. Wraps a native `<video>` element with React-friendly props (controlled `playing`/`currentTime`/`volume`), variants (`overlay`/`minimal`/`floating`/`bordered`), and sizes. Also renders the `<source>` / `<track>` children generated from the `sources` and `tracks` props.
 - `Video.module.css` — CSS module with custom properties and data-attribute selectors
 - `Video.test.tsx` — Jest tests using `@mantine-tests/core` render helper
 - `Video.story.tsx` — Storybook stories
 - `use-video.ts` — Headless `useVideo` hook returning state + actions, allowing consumers to build fully custom UI
 - `Video.context.ts` — Internal context shared with compound sub-components
-- `components/` — Compound sub-components (`Video.Controls`, `Video.PlayButton`, `Video.Timeline`, `Video.VolumeControl`, etc.) composed from Mantine `ActionIcon`, `Slider`, `Menu`, `Popover`
+- `components/` — The nine compound sub-components, composed from Mantine `ActionIcon` / `Slider` (see the Compound API section below for the exact list)
 - `index.ts` — Public exports (root component + sub-components + hook + types)
 
 ### Build Pipeline
@@ -62,27 +62,29 @@ The `next.config.mjs` dynamically sets `basePath` from the repository field in `
 
 ### Compound API
 
+There are exactly **nine** sub-components. Keep this list in sync with `Video.tsx` — an earlier version of this file invented seven that never existed (`Video.Poster`, `Video.BigPlayButton`, `Video.Loading`, `Video.Error`, `Video.VolumeControl`, `Video.SettingsMenu`, `Video.Captions`), and the fiction survived long enough to justify a wrong lint override. Verify against the source, not against this file:
+
 ```tsx
-<Video src="..." poster="...">
-  <Video.Poster />
-  <Video.BigPlayButton />
-  <Video.Loading />
-  <Video.Error />
+<Video src="..." poster="..." controls={false}>
   <Video.Controls>
     <Video.PlayButton />
     <Video.SkipButton seconds={-10} />
     <Video.SkipButton seconds={10} />
     <Video.Timeline />
     <Video.TimeDisplay />
-    <Video.VolumeControl />
+    <Video.MuteButton />
     <Video.CaptionsButton />
-    <Video.SettingsMenu />
     <Video.PiPButton />
     <Video.FullscreenButton />
   </Video.Controls>
-  <Video.Captions />
 </Video>
 ```
+
+Loading and error states, the poster and the big centre play button are **built into `Video.tsx`**, not separate sub-components. Volume lives inside `Video.MuteButton` (which reveals a `Slider` on hover), and there is no settings menu — playback rate is available through `useVideo`.
+
+### children render outside the media element
+
+`children` are the control-bar slot: they render as siblings of the `<video>`, not inside it. So a consumer **cannot** pass native media children (`<source>`, `<track>`) that way — they would never reach the element. That is what the `sources` and `tracks` props are for. `tracks` (added in 1.2.0) is also what makes `<Video.CaptionsButton />` appear: it hides itself when there is no `captions` / `subtitles` track to toggle, so before that prop existed the button was unreachable code.
 
 ### Compound Registration Checklist
 
