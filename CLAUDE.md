@@ -22,7 +22,7 @@ Bootstrapped from `mantine-base-component` (the GitHub template for the Mantine 
 | `yarn storybook` | Start Storybook dev server |
 | `yarn clean` | Remove build artifacts |
 | `yarn release:patch` | Bump patch version and deploy docs |
-| `diny yolo` | AI-assisted commit (stage all, generate message, commit + push) |
+| `diny yolo` | AI-assisted commit (stage all, generate message, commit + push); it needs a TTY, so from Claude Code commit with `git commit` + `git push` |
 
 > **Important**: After changing the public API (props, types, exports), always run `yarn clean && yarn build` before `yarn test`, because `yarn docgen` needs the fresh build output.
 
@@ -118,8 +118,7 @@ Standard test coverage: renders without crashing, forwards ref, data attributes 
 
 ## Ecosystem
 
-See the workspace `CLAUDE.md` (in the parent directory) for:
-- Development checklist (code → test → build → docs → release)
-- Cross-cutting patterns (compound components, responsive CSS, GitHub sync)
-- Update packages workflow
-- Release process
+See the workspace (the parent directory) for:
+- Development checklist and cross-cutting patterns (compound components, responsive CSS, GitHub sync): the workspace's `.claude/rules/component-development.md`, which loads with this repo's files
+- Update packages workflow: the workspace's `fleet-maintenance` skill
+- Release process: the workspace's `/release` command
