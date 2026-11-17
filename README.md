@@ -49,12 +49,12 @@ It requires **Mantine 9.x** and **React 19**.
 ## Installation
 
 ```sh
-npm install @gfazioli/mantine-video
+npm install @gfazioli/mantine-video @tabler/icons-react
 ```
 or
 
 ```sh
-yarn add @gfazioli/mantine-video
+yarn add @gfazioli/mantine-video @tabler/icons-react
 ```
 
 After installation import package styles at the root of your application:
