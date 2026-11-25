@@ -13,12 +13,15 @@ const GAP = 4;
 /**
  * How far to move the captions up, in pixels, or `null` when the bar does not cover the video.
  * Both positions are layout offsets in the player's root, so the bar's fade-in transform does not
- * count.
+ * count. A bar with no layout (`display: none`, or removed) has no offset to read.
  */
 export function cueLift(
   video: Pick<HTMLElement, 'offsetTop' | 'offsetHeight'>,
-  bar: Pick<HTMLElement, 'offsetTop'>
+  bar: Pick<HTMLElement, 'offsetTop' | 'offsetParent'>
 ): number | null {
+  if (bar.offsetParent === null) {
+    return null;
+  }
   const covered = video.offsetTop + video.offsetHeight - bar.offsetTop;
   return video.offsetHeight > 0 && covered > 0 ? covered + GAP : null;
 }

@@ -80,10 +80,12 @@ Captions are what makes `<Video.CaptionsButton />` appear — it hides itself wh
 
 Browsers paint cues at the bottom of the video, where the `overlay` and `floating` control bars
 sit. While the bar shows, the player moves the captions up so they rest just above it, and lets
-them back down when the bar hides. This works in Chromium browsers and Safari, which let a page move
-the captions' area; Firefox keeps them in place. The `minimal` and `bordered` variants, whose bar
-sits under the video, leave the captions alone. `<Video.CaptionsButton />` turns on the first
-`captions` or `subtitles` track.
+them back down when the bar hides. It moves the captions area that Chromium and WebKit expose to
+pages, so the whole area moves: a cue placed at the top with a WebVTT `line` setting moves up too.
+Firefox keeps the captions in place. The lift measures the bar rendered by `<Video.Controls />`,
+default or composed, and the `minimal` and `bordered` variants, whose bar sits under the video,
+leave the captions alone. `<Video.CaptionsButton />` turns on the first `captions` or `subtitles`
+track.
 
 ## Custom controls
 

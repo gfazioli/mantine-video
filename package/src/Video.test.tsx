@@ -244,7 +244,6 @@ describe('Video', () => {
     render(<Video src="/v.mp4" data-testid="player" />);
     const player = screen.getByTestId('player');
     const video = document.querySelector('video')!;
-    // No re-render between the presses, as with a held key.
     for (let i = 0; i < 10; i += 1) {
       fireEvent.keyDown(player, { key: 'ArrowDown' });
     }
@@ -256,15 +255,25 @@ describe('Video', () => {
 // was showing. While it shows, the captions' container is moved up by the height the bar covers.
 describe('cue lift', () => {
   it('measures how much of the video the bar covers, plus a gap', () => {
-    expect(cueLift({ offsetTop: 0, offsetHeight: 360 }, { offsetTop: 302 })).toBe(62);
-    expect(cueLift({ offsetTop: 0, offsetHeight: 360 }, { offsetTop: 360 })).toBeNull();
-    expect(cueLift({ offsetTop: 0, offsetHeight: 0 }, { offsetTop: 0 })).toBeNull();
+    const root = document.createElement('div');
+    const video = (offsetHeight: number) => ({ offsetTop: 0, offsetHeight });
+    expect(cueLift(video(360), { offsetTop: 302, offsetParent: root })).toBe(62);
+    expect(cueLift(video(360), { offsetTop: 360, offsetParent: root })).toBeNull();
+    expect(cueLift(video(0), { offsetTop: 0, offsetParent: root })).toBeNull();
+    // a bar with display: none, or removed, has no offset parent (and reads 0)
+    expect(cueLift(video(360), { offsetTop: 0, offsetParent: null })).toBeNull();
   });
 
   describe('on the player', () => {
     let height: jest.SpyInstance;
     let top: jest.SpyInstance;
+    let parent: jest.SpyInstance;
     beforeEach(() => {
+      parent = jest
+        .spyOn(window.HTMLElement.prototype, 'offsetParent', 'get')
+        .mockImplementation(function offsetParent(this: HTMLElement) {
+          return this.parentElement;
+        });
       // jsdom has no layout: a 360 px video whose bar starts 302 px down.
       height = jest
         .spyOn(window.HTMLElement.prototype, 'offsetHeight', 'get')
@@ -280,6 +289,7 @@ describe('cue lift', () => {
     afterEach(() => {
       height.mockRestore();
       top.mockRestore();
+      parent.mockRestore();
     });
     const tracks = [{ src: '/en.vtt', srcLang: 'en' }];
 

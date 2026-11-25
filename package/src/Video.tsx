@@ -576,7 +576,7 @@ export const Video = factory<VideoFactory>((_props) => {
   useEffect(() => {
     const v = video.videoRef.current;
     const bar = controlsRef.current;
-    if (!v || !bar || !hasTracks || flowControls) {
+    if (!v || !bar || !hasTracks || flowControls || typeof ResizeObserver === 'undefined') {
       setMeasuredLift(null);
       return undefined;
     }
