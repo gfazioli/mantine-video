@@ -3,6 +3,7 @@
  *
  * - `manta.mp4` (~5 MB, 54s) — public-domain manta-ray snorkeling footage from
  *   https://archive.org/details/mantas-in-3-minutes, re-encoded for web playback.
+ *   `manta-poster.jpg` is its frame at 4 s, at the clip's own 854x480.
  * - `showcase.mp4` (~1 MB, 8s) — short user-provided clip used as the showcase
  *   background on the /homepage demo, re-encoded with the same ffmpeg pipeline.
  * - `aquarium.mp4` (~6 MB, 37s) — Charleston Aquarium tropical-fish footage,

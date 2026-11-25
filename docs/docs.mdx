@@ -78,6 +78,13 @@ slot is the control bar, so a `<track>` placed there would never reach the `<vid
 Captions are what makes `<Video.CaptionsButton />` appear — it hides itself when the player has no
 `captions` or `subtitles` track to toggle.
 
+Browsers paint cues at the bottom of the video, where the `overlay` and `floating` control bars
+sit. While the bar shows, the player moves the captions up so they rest just above it, and lets
+them back down when the bar hides. This works in Chromium browsers and Safari, which let a page move
+the captions' area; Firefox keeps them in place. The `minimal` and `bordered` variants, whose bar
+sits under the video, leave the captions alone. `<Video.CaptionsButton />` turns on the first
+`captions` or `subtitles` track.
+
 ## Custom controls
 
 The control bar is a compound component made of `<Video.PlayButton />`, `<Video.Timeline />`, `<Video.TimeDisplay />`, `<Video.MuteButton />`, `<Video.SkipButton />`, `<Video.CaptionsButton />`, `<Video.PiPButton />` and `<Video.FullscreenButton />`. Pass `controls={false}` to opt out of the default layout and compose your own.

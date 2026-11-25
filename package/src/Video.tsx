@@ -14,6 +14,7 @@ import {
   type MantineRadius,
   type MantineSize,
 } from '@mantine/core';
+import { clamp } from '@mantine/hooks';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { VideoCaptionsButton } from './components/VideoCaptionsButton';
 import { VideoControls } from './components/VideoControls';
@@ -24,6 +25,7 @@ import { VideoPlayButton } from './components/VideoPlayButton';
 import { VideoSkipButton } from './components/VideoSkipButton';
 import { VideoTimeDisplay } from './components/VideoTimeDisplay';
 import { VideoTimeline } from './components/VideoTimeline';
+import { cueLift } from './cue-lift';
 import { useVideo } from './use-video';
 import { VideoProvider } from './Video.context';
 import classes from './Video.module.css';
@@ -282,6 +284,11 @@ export type VideoFactory = Factory<{
   };
 }>;
 
+/** A keyboard volume step, kept on exact hundredths: ten steps down from 1 read 0.5, not 0.4999…. */
+function volumeStep(volume: number, delta: number) {
+  return Math.round(clamp(volume + delta, 0, 1) * 100) / 100;
+}
+
 const defaultProps: Partial<VideoProps> = {
   color: 'blue',
   radius: 'md',
@@ -411,20 +418,16 @@ export const Video = factory<VideoFactory>((_props) => {
   const hasSources = Array.isArray(sources) && sources.length > 0;
   const hasTracks = Array.isArray(tracks) && tracks.length > 0;
 
-  // Swap to `fallbackSrc` once if the primary source(s) fail to load. Guarded
-  // with a ref so a failing fallback doesn't loop; reset when the source set
-  // changes.
+  // Swap to `fallbackSrc` once every primary source has failed: the browser tries the <source>
+  // entries in order, so only the last one failing means they all did. Guarded with a ref so a
+  // failing fallback doesn't loop, and reset when the source set changes, keyed on its content
+  // since `sources` is often an inline array.
+  const sourcesKey = hasSources ? JSON.stringify(sources) : '';
   const triedFallbackRef = useRef(false);
-  useEffect(() => {
-    triedFallbackRef.current = false;
-  }, [src, sources, fallbackSrc]);
 
-  const handleSourceError = useCallback(() => {
-    if (!fallbackSrc || triedFallbackRef.current) {
-      return;
-    }
+  const applyFallback = useCallback(() => {
     const el = video.videoRef.current;
-    if (!el) {
+    if (!fallbackSrc || triedFallbackRef.current || !el) {
       return;
     }
     triedFallbackRef.current = true;
@@ -433,6 +436,32 @@ export const Video = factory<VideoFactory>((_props) => {
     el.src = fallbackSrc;
     el.load();
   }, [fallbackSrc, video.videoRef]);
+
+  useEffect(() => {
+    triedFallbackRef.current = false;
+    // On a server-rendered page every source can fail before React attaches its handlers: the
+    // element then waits in NETWORK_NO_SOURCE with no further error to come. Right after a change
+    // it passes through NETWORK_NO_SOURCE too, but with no error and nothing tried yet.
+    const el = video.videoRef.current;
+    if (el && el.networkState === el.NETWORK_NO_SOURCE) {
+      const sourceNodes = el.querySelectorAll('source');
+      const last = sourceNodes[sourceNodes.length - 1];
+      if (el.error || (last && el.currentSrc === last.src)) {
+        applyFallback();
+      }
+    }
+  }, [src, sourcesKey, applyFallback, video.videoRef]);
+
+  // The <video>'s own errors (a failing `src`, a decode error). A <source> error also bubbles here
+  // through React's tree: those are left to the last <source>'s own handler.
+  const handleVideoError = useCallback(
+    (event: React.SyntheticEvent<HTMLVideoElement>) => {
+      if (event.target === event.currentTarget) {
+        applyFallback();
+      }
+    },
+    [applyFallback]
+  );
 
   const [controlsVisible, setControlsVisible] = useState(true);
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -486,6 +515,8 @@ export const Video = factory<VideoFactory>((_props) => {
       if (!shortcuts) return;
       const target = event.target as HTMLElement;
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return;
+      // The element's own volume: a held key repeats faster than the state re-renders.
+      const currentVolume = () => video.videoRef.current?.volume ?? video.volume;
 
       switch (event.key) {
         case ' ':
@@ -508,11 +539,11 @@ export const Video = factory<VideoFactory>((_props) => {
           break;
         case 'ArrowUp':
           event.preventDefault();
-          video.setVolume(Math.min(1, video.volume + 0.05));
+          video.setVolume(volumeStep(currentVolume(), 0.05));
           break;
         case 'ArrowDown':
           event.preventDefault();
-          video.setVolume(Math.max(0, video.volume - 0.05));
+          video.setVolume(volumeStep(currentVolume(), -0.05));
           break;
         case 'm':
         case 'M':
@@ -538,6 +569,26 @@ export const Video = factory<VideoFactory>((_props) => {
 
   const flowControls = variant === 'minimal' || variant === 'bordered';
 
+  // While the overlay bar shows, lift the captions above it: browsers paint them at the bottom
+  // of the video, right under the bar.
+  const controlsRef = useRef<HTMLDivElement | null>(null);
+  const [measuredLift, setMeasuredLift] = useState<number | null>(null);
+  useEffect(() => {
+    const v = video.videoRef.current;
+    const bar = controlsRef.current;
+    if (!v || !bar || !hasTracks || flowControls) {
+      setMeasuredLift(null);
+      return undefined;
+    }
+    const measure = () => setMeasuredLift(cueLift(v, bar));
+    measure();
+    const resize = new ResizeObserver(measure);
+    resize.observe(v);
+    resize.observe(bar);
+    return () => resize.disconnect();
+  }, [flowControls, hasTracks, video.videoRef]);
+  const captionsLift = controlsVisible ? measuredLift : null;
+
   return (
     <VideoProvider
       value={{
@@ -545,12 +596,16 @@ export const Video = factory<VideoFactory>((_props) => {
         getStyles,
         controlsVisible,
         showControls,
+        controlsRef,
       }}
     >
       <Box
         {...getStyles('root', {
           style: [
             aspectRatio && !flowControls ? { aspectRatio: String(aspectRatio) } : undefined,
+            captionsLift !== null
+              ? ({ '--video-cue-lift': `${captionsLift}px` } as React.CSSProperties)
+              : undefined,
             style,
           ],
         })}
@@ -598,11 +653,17 @@ export const Video = factory<VideoFactory>((_props) => {
           loop={loop}
           playsInline={playsInline}
           preload={preload}
-          onError={handleSourceError}
+          onError={handleVideoError}
         >
           {hasSources
             ? sources!.map((source, index) => (
-                <source key={index} src={source.src} type={source.type} media={source.media} />
+                <source
+                  key={index}
+                  src={source.src}
+                  type={source.type}
+                  media={source.media}
+                  onError={index === sources!.length - 1 ? applyFallback : undefined}
+                />
               ))
             : null}
           {hasTracks

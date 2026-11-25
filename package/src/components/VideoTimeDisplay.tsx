@@ -23,7 +23,6 @@ export const VideoTimeDisplay = forwardRef<HTMLParagraphElement, VideoTimeDispla
       <Text
         ref={ref}
         size="sm"
-        c="white"
         ff="monospace"
         ta="center"
         {...ctx.getStyles('timeDisplay')}

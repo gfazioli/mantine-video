@@ -1,4 +1,5 @@
 import { Box, type BoxProps } from '@mantine/core';
+import { useMergedRef } from '@mantine/hooks';
 import React, { forwardRef, type ReactNode } from 'react';
 import { useVideoContext } from '../Video.context';
 import { VideoCaptionsButton } from './VideoCaptionsButton';
@@ -16,10 +17,11 @@ export interface VideoControlsProps extends BoxProps {
 export const VideoControls = forwardRef<HTMLDivElement, VideoControlsProps>(
   ({ children, ...others }, ref) => {
     const ctx = useVideoContext();
+    const mergedRef = useMergedRef(ref, ctx.controlsRef);
 
     return (
       <Box
-        ref={ref}
+        ref={mergedRef}
         {...ctx.getStyles('controls')}
         mod={{ visible: ctx.controlsVisible }}
         onClick={(event) => event.stopPropagation()}
