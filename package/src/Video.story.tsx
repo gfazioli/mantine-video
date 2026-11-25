@@ -4,6 +4,9 @@ import { Video, type VideoProps, type VideoVariant } from './Video';
 
 const SAMPLE_SRC = 'https://archive.org/download/mantas-in-3-minutes/Manta%201%20minute.ia.mp4';
 const SAMPLE_POSTER = 'https://archive.org/services/img/mantas-in-3-minutes';
+const SAMPLE_CAPTIONS = `data:text/vtt;charset=utf-8,${encodeURIComponent(
+  'WEBVTT\n\n00:00.000 --> 01:00.000\nThis caption rises above the bar while the bar shows.\n'
+)}`;
 
 export default {
   title: 'Components/Video',
@@ -72,6 +75,27 @@ export function Variants() {
             variant=&quot;{variant}&quot;
           </Text>
           <Video src={SAMPLE_SRC} poster={SAMPLE_POSTER} aspectRatio={16 / 9} variant={variant} />
+        </Paper>
+      ))}
+    </Stack>
+  );
+}
+
+export function CaptionsAboveTheBar() {
+  return (
+    <Stack gap="lg" p="md" maw={720}>
+      {(['overlay', 'floating', 'minimal'] satisfies VideoVariant[]).map((variant) => (
+        <Paper key={variant} withBorder>
+          <Text size="sm" fw={500} px="sm" py={6}>
+            variant=&quot;{variant}&quot;
+          </Text>
+          <Video
+            src={SAMPLE_SRC}
+            poster={SAMPLE_POSTER}
+            aspectRatio={16 / 9}
+            variant={variant}
+            tracks={[{ src: SAMPLE_CAPTIONS, srcLang: 'en', label: 'English', default: true }]}
+          />
         </Paper>
       ))}
     </Stack>

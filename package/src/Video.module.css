@@ -58,6 +58,13 @@
   object-fit: var(--video-object-fit, contain);
 }
 
+/* Captions rise above the overlay bar while it shows (--video-cue-lift, set by Video.tsx). Chromium
+   and Safari expose the captions' container; elsewhere they keep their place. */
+.video::-webkit-media-text-track-container {
+  transform: translateY(calc(-1 * var(--video-cue-lift, 0px)));
+  transition: transform 200ms ease;
+}
+
 .root[data-as-background] {
   position: absolute;
   inset: 0;
@@ -207,6 +214,7 @@
 }
 
 .timeDisplay {
+  color: var(--video-controls-text-color);
   min-width: 88px;
   text-align: center;
   font-variant-numeric: tabular-nums;

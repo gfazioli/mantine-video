@@ -1,5 +1,5 @@
 import type { GetStylesApi } from '@mantine/core';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, type RefObject } from 'react';
 import type { UseVideoReturn } from './use-video';
 import type { VideoFactory } from './Video';
 
@@ -7,6 +7,8 @@ export interface VideoContextValue extends UseVideoReturn {
   getStyles: GetStylesApi<VideoFactory>;
   controlsVisible: boolean;
   showControls: () => void;
+  /** The control bar's element, set by `Video.Controls`: captions are lifted above it while it shows. */
+  controlsRef?: RefObject<HTMLDivElement | null>;
 }
 
 export const VideoContext = createContext<VideoContextValue | null>(null);
